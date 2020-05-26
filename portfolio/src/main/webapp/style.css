@@ -12,8 +12,15 @@
 }
 
 h1 {
+    font-size: 60px; 
+    font-family: 'Quicksand', sans-serif; 
+    margin-bottom: 0; 
+}
+
+h2 {
     font-size: 45px; 
     font-family: 'Quicksand', sans-serif; 
+    text-align: center; 
 }
 
 #header {
@@ -37,4 +44,38 @@ h1 {
     display: flex; 
     flex-direction: column; 
     width: 65%; 
+}
+
+#gallery {
+    display: flex; 
+    justify-content: center;
+    width: 100%; 
+}
+
+.column {
+    display: flex;
+    flex-direction: column; 
+    margin-right: 10px;
+    margin-left: 10px;
+    width: 24%; 
+}
+
+.location {
+    position: relative;
+    margin-bottom: 10px; 
+    width: 100%; 
+}
+
+.locationImg {
+    width: 100%; 
+}
+
+.locationLabel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 99; 
+    display: none; 
+    font-weight: bold; 
 }
