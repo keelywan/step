@@ -29,14 +29,14 @@ function addRandomGreeting() {
 
 function displayLocation(name) {
   var label = document.getElementById(name); 
-  var img = document.getElementById(name+'Img'); 
+  var img = document.getElementById(name+'-Img'); 
   label.style.display = "block"; 
   img.style.opacity = 0.3; 
 }
 
 function hideLocation(name) {
   var label = document.getElementById(name); 
-  var img = document.getElementById(name+'Img'); 
+  var img = document.getElementById(name+'-Img'); 
   label.style.display = "none"; 
   img.style.opacity = 1; 
 }
