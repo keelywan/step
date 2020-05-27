@@ -38,9 +38,25 @@ h2 {
 }
 
 #right {
-    display: flex; 
-    flex-direction: column; 
-    width: 65%; 
+  display: flex; 
+  flex-direction: column; 
+  width: 65%; 
+}
+
+/* About Section */ 
+
+ul {
+  list-style-type: circle; 
+}
+
+li:nth-child(2n) {
+  text-align:center; 
+  list-style-type: none; 
+}
+
+.about-img {
+  height: 300px; 
+  margin: 5px 5px 20px 0; 
 }
 
 /* Gallery */ 
