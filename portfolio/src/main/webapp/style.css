@@ -1,11 +1,7 @@
 html,
 body {
-  align-items: center; 
-  display: flex; 
-  flex-direction: column; 
   font: 25px 'Nunito', sans-serif; 
   height: 100%; 
-  margin: 0 auto; 
   width: 100%;
 }
 
@@ -32,6 +28,8 @@ h2 {
 section {
   align-items: center; 
   display: flex; 
+  justify-content: center;
+  margin: 0 auto; 
   min-height: 100%;
   width: 80%;
 }
