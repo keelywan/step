@@ -1,9 +1,12 @@
 html,
 body {
+  align-items: center; 
+  display: flex; 
+  flex-direction: column; 
   font: 25px 'Nunito', sans-serif; 
   height: 100%; 
   margin: 0 auto; 
-  width: 80%;
+  width: 100%;
 }
 
 #content {
@@ -30,6 +33,7 @@ section {
   align-items: center; 
   display: flex; 
   min-height: 100%;
+  width: 80%;
 }
 
 /* Header */
