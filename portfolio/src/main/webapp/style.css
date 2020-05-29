@@ -36,11 +36,16 @@ section {
   width: 80%;
 }
 
+a {
+  text-decoration: none;
+}
+
 /* Nav Bar */ 
 
 #nav-bar {
   align-items: center; 
   background-color: #9cc2ff; 
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
   display: flex; 
   height: 8vh; 
   position: fixed; 
@@ -50,8 +55,13 @@ section {
 #nav-bar a {
   color: white; 
   font-size: 3.5vh;
-  margin: 0 15px; 
+  margin: 0 30px; 
   text-decoration: none; 
+  transition: all 0.2s ease-in-out;
+}
+
+#nav-bar a:hover {
+  transform: scale(1.05);
 }
 
 /* Header */
@@ -85,6 +95,20 @@ ul {
 
 li {
   padding: 0 0 20px 0; 
+}
+
+#links a {
+  color: #9cc2ff;
+  font-size: 3.5vh;
+  padding: 0 25px 0 0;
+}
+
+a i {
+  transition: all 0.2s ease-in-out;
+}
+
+a i:hover {
+  transform: scale(1.2);
 }
 
 /* About Section */ 
@@ -123,6 +147,11 @@ li {
 
 .location-img {
   width: 100%; 
+  transition: all 0.2s ease-in-out;
+}
+
+.location-img:hover {
+  transform: scale(1.05);
 }
 
 .location-label {
@@ -155,5 +184,9 @@ li {
 
   #nav-bar a {
     font-size: 2.5vh; 
+  }
+
+  #links a {
+    font-size: 2.5vh;
   }
 }
