@@ -13,16 +13,27 @@
 // limitations under the License.
 
 /**
- * Adds a random greeting to the page.
+ * Retrieves image and label information.
  */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
-
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+function getImage(name) {
+  return [document.getElementById(name), document.getElementById(name + '-Img')];
 }
+
+/**
+ * Reduces opacity and shows name of location when image is moused over.
+ */
+function displayLocation(name) {
+  var [label, img] = getImage(name);
+  label.style.display = "block"; 
+  img.style.opacity = 0.3; 
+}
+
+/**
+ * Hides label and changes opacity back to 1 when mousing out of image. 
+ */
+
+function hideLocation(name) {
+  var [label, img] = getImage(name); 
+  label.style.display = "none"; 
+  img.style.opacity = 1; 
+} 
