@@ -113,13 +113,27 @@ a i:hover {
 
 /* About Section */ 
 
-#about-me-list li:nth-child(2n) {
-  list-style-type: none; 
-  text-align: center; 
+.list-item {
+  display: flex;
+  margin: 15px 0;
+}
+
+.description-container {
+  align-items: center;
+  display: flex;
+  width: 50%;
+}
+
+.img-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 45%;
 }
 
 .about-img {
-  height: 200px; 
+  border-radius: 5%;
+  height: 15vh; 
   margin: 5px 5px 20px 0; 
 }
 
