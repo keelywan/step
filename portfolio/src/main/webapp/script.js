@@ -13,11 +13,17 @@
 // limitations under the License.
 
 /**
+ * Retrieves image and label information.
+ */
+function getImage(name) {
+  return [document.getElementById(name), document.getElementById(name + '-Img')];
+}
+
+/**
  * Reduces opacity and shows name of location when image is moused over.
  */
 function displayLocation(name) {
-  var label = document.getElementById(name); 
-  var img = document.getElementById(name+'-Img'); 
+  var [label, img] = getImage(name);
   label.style.display = "block"; 
   img.style.opacity = 0.3; 
 }
@@ -27,8 +33,7 @@ function displayLocation(name) {
  */
 
 function hideLocation(name) {
-  var label = document.getElementById(name); 
-  var img = document.getElementById(name+'-Img'); 
+  var [label, img] = getImage(name); 
   label.style.display = "none"; 
   img.style.opacity = 1; 
 } 
