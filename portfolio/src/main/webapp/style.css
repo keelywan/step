@@ -21,6 +21,7 @@ h1 {
 #nav-bar {
   align-items: center;
   background-color: #9cc2ff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
   display: flex;
   height: 8vh;
   position: fixed;
@@ -33,6 +34,11 @@ h1 {
   font-size: 3.5vh;
   margin: 0 15px;
   text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+
+#nav-bar a:hover {
+  transform: scale(1.05);
 }
 
 #header {
