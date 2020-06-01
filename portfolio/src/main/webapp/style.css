@@ -2,6 +2,7 @@ html,
 body {
   font: 25px 'Nunito', sans-serif; 
   height: 100%;
+  margin: 0;
   width: 100%; 
 }
 
@@ -40,7 +41,7 @@ section {
 #nav-bar a {
   color: white;
   font-size: 3.5vh;
-  margin: 0 15px;
+  margin: 0 30px;
   text-decoration: none;
   transition: all 0.2s ease-in-out;
 }
