@@ -36,4 +36,14 @@ function hideLocation(name) {
   var [label, img] = getImage(name); 
   label.style.display = "none"; 
   img.style.opacity = 1; 
-} 
+}
+
+/**
+ * Async function to fetch server content and add it to DOM.
+ */
+async function getServerContent() {
+  const response = await fetch('/data');
+  const content = await response.text();
+  console.log(content);
+  document.getElementById('content-container').innerText = content;
+}
