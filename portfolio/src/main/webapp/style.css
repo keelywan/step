@@ -184,3 +184,22 @@ a i:hover {
     font-size: 2.5vh;
   }
 }
+
+/* Comment Section */ 
+
+.comment-div {
+  margin: 15px 0; 
+}
+
+.user-attr {
+  font-weight: bold;
+}
+
+.date-attr {
+  float: right; 
+  font-style: italic;
+}
+
+.text-attr {
+  margin: 0;
+}

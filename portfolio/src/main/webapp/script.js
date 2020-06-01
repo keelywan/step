@@ -44,6 +44,42 @@ function hideLocation(name) {
 async function getServerContent() {
   const response = await fetch('/data');
   const content = await response.text();
-  console.log(content);
-  document.getElementById('content-container').innerText = content;
+  var obj = JSON.parse(content); 
+  console.log(obj); 
+  // document.getElementById('comment-container').innerText = content;
+
+  const commentEl = document.getElementById('comment-container');
+  if(obj.length > 0) {
+    const headEl = document.createElement('div');
+    headEl.innerText = "Comments:";
+    commentEl.appendChild(headEl);
+  }
+  obj.forEach((line) => {
+    commentEl.appendChild(createDivElement(line));
+  });
+}
+
+/** 
+ * Creates a <div> element containing comment information. 
+ */
+function createDivElement(comment) {
+  const divElement = document.createElement('div');
+  divElement.setAttribute("class", "comment-div");
+  
+  var userP = document.createElement("span");
+  userP.innerText = comment.user; 
+  userP.setAttribute("class", "user-attr");
+
+  var dateP = document.createElement("span");
+  dateP.innerText = comment.commentDate; 
+  dateP.setAttribute("class", "date-attr");
+
+  var textP = document.createElement("p"); 
+  textP.innerText = comment.text;
+  textP.setAttribute("class", "text-attr");
+
+  divElement.appendChild(userP);
+  divElement.appendChild(dateP); 
+  divElement.appendChild(textP); 
+  return divElement;
 }

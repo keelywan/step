@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand&family=Nunito&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/906fde76e4.js"></script>
   </head>
-  <body>
+  <body onload="getServerContent()">
     <div id="nav-bar">
       <a href="#">Home</a>
       <a href="#about-me">About Me</a>
@@ -149,8 +149,17 @@
     <section>
       <div>
         <h2>~ data servlet ~</h2>
-        <button onclick="getServerContent()">Get Server Content!</button>
-        <div id="content-container"></div>
+        <br/>
+        <!-- <button onclick="getServerContent()">Get Server Content!</button>
+        <div id="content-container"></div> -->
+        <form action="/data" method="POST">
+          <textarea rows="4" cols="60" name="user-comment" required></textarea>
+      	  <br/>
+      	  <input type="submit" value="Comment" />
+        </form>
+        <div>
+          <div id="comment-container"></div>
+        </div>
       </div>
     </section>
   </body>
