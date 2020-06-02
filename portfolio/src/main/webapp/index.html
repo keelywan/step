@@ -153,12 +153,16 @@
         <!-- <button onclick="getServerContent()">Get Server Content!</button>
         <div id="content-container"></div> -->
         <form action="/data" method="POST">
-          <textarea rows="4" cols="60" name="user-comment" required></textarea>
+        	Name: <input name="name" />
+          Comment: <textarea rows="4" cols="60" name="user-comment" required></textarea>
       	  <br/>
       	  <input type="submit" value="Comment" />
         </form>
         <div>
           <div id="comment-container"></div>
+        </div>
+        <div>
+          <div id="page-num"></div>
         </div>
       </div>
     </section>

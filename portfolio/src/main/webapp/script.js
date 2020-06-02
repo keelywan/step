@@ -75,7 +75,7 @@ function createDivElement(comment) {
   dateP.setAttribute("class", "date-attr");
 
   var textP = document.createElement("p"); 
-  textP.innerText = comment.text;
+  textP.innerText = comment.content;
   textP.setAttribute("class", "text-attr");
 
   divElement.appendChild(userP);

@@ -23,15 +23,35 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 import java.util.Date;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private ArrayList<Comment> comments = new ArrayList<Comment>(); 
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    ArrayList<Comment> comments = new ArrayList<>();
+    for (Entity entity : results.asIterable()) {
+      long id = entity.getKey().getId();
+      String username = (String) entity.getProperty("username");
+      long timestamp = (long) entity.getProperty("timestamp");
+      Date date = (Date) entity.getProperty("date");
+      String content = (String) entity.getProperty("content");
+
+      Comment comment = new Comment(username, id, timestamp, date, content);
+      comments.add(comment);
+    }
     String json = convertToJSON(comments);
 
     response.setContentType("application/json");
@@ -42,7 +62,16 @@ public class DataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the input from the form.
     String comment = request.getParameter("user-comment");
-    comments.add(new Comment(new Date(), "Anonymous", comment));
+    long timestamp = System.currentTimeMillis();
+
+    Entity taskEntity = new Entity("Comment");
+    taskEntity.setProperty("username", "Anonymous");
+    taskEntity.setProperty("timestamp", timestamp);
+    taskEntity.setProperty("date", new Date());
+    taskEntity.setProperty("content", comment);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(taskEntity);
 
     // Redirect back to the HTML page.
     response.sendRedirect("/");

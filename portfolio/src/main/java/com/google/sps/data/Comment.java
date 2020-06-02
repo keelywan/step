@@ -19,18 +19,26 @@ import java.util.Date;
 /** Class containing comment data. */ 
 public class Comment {
 
-  /** Time at which comment was posted. */
-	private Date commentDate; 
-
   /** Username of commenter. */
   private String user; 
 
-  /** Comment text. */
-  private String text; 
+  /** ID of comment in Datastore. */
+  private long id;
 
-  public Comment(Date postTime, String username, String comment) {
-    commentDate = postTime; 
+  /** Timestamp of commment. */
+  private long timestamp;
+
+  /** Time at which comment was posted. */
+	private Date commentDate; 
+
+  /** Comment text. */
+  private String content; 
+
+  public Comment(String username, long commentID, long time, Date postTime, String comment) {
     user = username; 
-    text = comment; 
+    id = commentID; 
+    timestamp = time; 
+    commentDate = postTime; 
+    content = comment; 
   }
 }
