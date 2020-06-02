@@ -29,7 +29,7 @@ public class Comment {
   private long timestamp;
 
   /** Time at which comment was posted. */
-	private Date commentDate; 
+  private Date commentDate; 
 
   /** Comment text. */
   private String content; 
