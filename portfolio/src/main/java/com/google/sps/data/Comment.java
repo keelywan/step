@@ -25,19 +25,15 @@ public class Comment {
   /** ID of comment in Datastore. */
   private long id;
 
-  /** Timestamp of commment. */
-  private long timestamp;
-
   /** Time at which comment was posted. */
   private Date commentDate; 
 
   /** Comment text. */
   private String content; 
 
-  public Comment(String username, long commentID, long time, Date postTime, String comment) {
+  public Comment(String username, long commentID, Date postTime, String comment) {
     user = username; 
     id = commentID; 
-    timestamp = time; 
     commentDate = postTime; 
     content = comment; 
   }

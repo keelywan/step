@@ -36,7 +36,7 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+    Query query = new Query("Comment").addSort("date", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
@@ -45,11 +45,10 @@ public class DataServlet extends HttpServlet {
     for (Entity entity : results.asIterable()) {
       long id = entity.getKey().getId();
       String username = (String) entity.getProperty("username");
-      long timestamp = (long) entity.getProperty("timestamp");
       Date date = (Date) entity.getProperty("date");
       String content = (String) entity.getProperty("content");
 
-      Comment comment = new Comment(username, id, timestamp, date, content);
+      Comment comment = new Comment(username, id, date, content);
       comments.add(comment);
     }
     String json = convertToJSON(comments);
@@ -66,11 +65,9 @@ public class DataServlet extends HttpServlet {
     if(name.equals("")) {
       name = "Anonymous";
     }
-    long timestamp = System.currentTimeMillis();
 
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("username", name);
-    commentEntity.setProperty("timestamp", timestamp);
     commentEntity.setProperty("date", new Date());
     commentEntity.setProperty("content", comment);
 
