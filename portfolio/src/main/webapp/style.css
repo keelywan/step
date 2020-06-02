@@ -37,6 +37,7 @@ section {
   position: fixed;
   top: 0;
   width: 100%;
+  z-index: 100;
 }
 
 #nav-bar a {
@@ -169,7 +170,6 @@ a i:hover {
 
   h2 {
     font-size: 45px;
-    padding-top: 0;
   }
 
   #nav-bar {
@@ -183,4 +183,63 @@ a i:hover {
   #links a {
     font-size: 2.5vh;
   }
+}
+
+/* Comment Section */ 
+
+#comment-section {
+  width: 100%;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+}
+
+form p {
+  margin: 0;
+}
+
+#input-section {
+  width: 100%;
+}
+
+#name-input {
+  width: 20%;
+}
+
+textarea {
+  width: 100%;
+}
+
+#comment-button {
+  background-color: #9cc2ff;
+  border: 1px solid #9cc2ff;
+  border-radius: 0.25rem;
+  color: white;
+  font-size: 0.9rem;
+  padding: 0.35rem 0.75rem;
+}
+
+#comment-button:hover {
+  background-color: #98bbf5;
+  border-color: #98bbf5;
+  cursor: pointer;
+}
+
+.comment-div {
+  margin: 15px 0;
+}
+
+.user-attr {
+  font-weight: bold;
+}
+
+.date-attr {
+  float: right;
+  font-style: italic;
+}
+
+.content-attr {
+  margin: 0;
 }
