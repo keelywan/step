@@ -206,10 +206,12 @@ form p {
 }
 
 #name-input {
+  font: 0.75rem 'Nunito', sans-serif;
   width: 20%;
 }
 
 textarea {
+  font: 0.75rem 'Nunito', sans-serif;
   width: 100%;
 }
 
