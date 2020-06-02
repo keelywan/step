@@ -31,7 +31,6 @@ function displayLocation(name) {
 /**
  * Hides label and changes opacity back to 1 when mousing out of image. 
  */
-
 function hideLocation(name) {
   var [label, img] = getImage(name); 
   label.style.display = "none"; 
@@ -45,24 +44,17 @@ async function getServerContent() {
   const response = await fetch('/data');
   const content = await response.text();
   var obj = JSON.parse(content); 
-  console.log(obj); 
-  // document.getElementById('comment-container').innerText = content;
 
   const commentEl = document.getElementById('comment-container');
-  if(obj.length > 0) {
-    const headEl = document.createElement('div');
-    headEl.innerText = "Comments:";
-    commentEl.appendChild(headEl);
-  }
   obj.forEach((line) => {
-    commentEl.appendChild(createDivElement(line));
+    commentEl.appendChild(createCommentElement(line));
   });
 }
 
 /** 
  * Creates a <div> element containing comment information. 
  */
-function createDivElement(comment) {
+function createCommentElement(comment) {
   const divElement = document.createElement('div');
   divElement.setAttribute("class", "comment-div");
   
@@ -76,7 +68,7 @@ function createDivElement(comment) {
 
   var textP = document.createElement("p"); 
   textP.innerText = comment.content;
-  textP.setAttribute("class", "text-attr");
+  textP.setAttribute("class", "content-attr");
 
   divElement.appendChild(userP);
   divElement.appendChild(dateP); 

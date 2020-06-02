@@ -62,16 +62,20 @@ public class DataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the input from the form.
     String comment = request.getParameter("user-comment");
+    String name = request.getParameter("name").trim();
+    if(name.equals("")) {
+      name = "Anonymous";
+    }
     long timestamp = System.currentTimeMillis();
 
-    Entity taskEntity = new Entity("Comment");
-    taskEntity.setProperty("username", "Anonymous");
-    taskEntity.setProperty("timestamp", timestamp);
-    taskEntity.setProperty("date", new Date());
-    taskEntity.setProperty("content", comment);
+    Entity commentEntity = new Entity("Comment");
+    commentEntity.setProperty("username", name);
+    commentEntity.setProperty("timestamp", timestamp);
+    commentEntity.setProperty("date", new Date());
+    commentEntity.setProperty("content", comment);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(taskEntity);
+    datastore.put(commentEntity);
 
     // Redirect back to the HTML page.
     response.sendRedirect("/");
