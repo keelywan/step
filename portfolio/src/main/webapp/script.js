@@ -24,7 +24,7 @@ function getImage(name) {
  */
 function displayLocation(name) {
   var [label, img] = getImage(name);
-  label.style.display = "block"; 
+  label.style.display = 'block';
   img.style.opacity = 0.3; 
 }
 
@@ -33,7 +33,7 @@ function displayLocation(name) {
  */
 function hideLocation(name) {
   var [label, img] = getImage(name); 
-  label.style.display = "none"; 
+  label.style.display = 'none';
   img.style.opacity = 1; 
 }
 
@@ -45,10 +45,18 @@ async function getServerContent() {
   const content = await response.text();
   var obj = JSON.parse(content); 
 
+  var num = document.getElementById('display-num').value;
+  if(num === "all") {
+    num = obj.length;
+  }
+  num = Math.min(obj.length, parseInt(num));
+
+  clearDiv();
+
   const commentEl = document.getElementById('comment-container');
-  obj.forEach((line) => {
-    commentEl.appendChild(createCommentElement(line));
-  });
+  for(var i = 0; i < num; i++) {
+    commentEl.appendChild(createCommentElement(obj[i]));
+  }
 }
 
 /** 
@@ -56,22 +64,58 @@ async function getServerContent() {
  */
 function createCommentElement(comment) {
   const divElement = document.createElement('div');
-  divElement.setAttribute("class", "comment-div");
+  divElement.setAttribute('class', 'comment-div');
   
-  var userP = document.createElement("span");
+  const userP = document.createElement("span");
   userP.innerText = comment.user; 
-  userP.setAttribute("class", "user-attr");
+  userP.setAttribute('class', 'user-attr');
 
-  var dateP = document.createElement("span");
+  const dateP = document.createElement('span');
   dateP.innerText = comment.commentDate; 
-  dateP.setAttribute("class", "date-attr");
+  dateP.setAttribute('class', 'date-attr');
 
-  var textP = document.createElement("p"); 
+  const deleteButton = document.createElement('button');
+  deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+  deleteButton.setAttribute('class', 'del-attr');
+  deleteButton.addEventListener('click', () => {
+    deleteComment(comment);
+  });
+
+  const textP = document.createElement('p');
   textP.innerText = comment.content;
-  textP.setAttribute("class", "content-attr");
+  textP.setAttribute('class', 'content-attr');
 
   divElement.appendChild(userP);
+  divElement.appendChild(deleteButton);
   divElement.appendChild(dateP); 
   divElement.appendChild(textP); 
   return divElement;
+}
+
+/**
+ * Clears div element containing comments.
+ */
+function clearDiv() {
+  const commentEl = document.getElementById('comment-container');
+  while(commentEl.firstChild) {
+    commentEl.removeChild(commentEl.firstChild);
+  }
+}
+
+/**
+ * Deletes all comments from Datastore.
+ */
+async function deleteAll() {
+  const response = await fetch('/delete-data', {method: 'POST'});
+  getServerContent();
+}
+
+/**
+ * Deletes specified comment.
+ */
+async function deleteComment(comment) {
+  const params = new URLSearchParams();
+  params.append('id', comment.id);
+  const response = await fetch('/delete-data', {method: 'POST', body: params});
+  getServerContent();
 }
