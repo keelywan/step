@@ -246,7 +246,9 @@ select:hover {
 }
 
 #display-user{
+  border-radius: 0.25rem;
   font: 0.75rem 'Nunito', sans-serif;
+  padding: 0.35rem 0.75rem;
 }
 
 .comment-div {
