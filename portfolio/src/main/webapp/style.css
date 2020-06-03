@@ -245,6 +245,10 @@ select:hover {
   cursor: pointer;
 }
 
+#display-user{
+  font: 0.75rem 'Nunito', sans-serif;
+}
+
 .comment-div {
   margin: 15px 0;
 }

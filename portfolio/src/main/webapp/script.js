@@ -41,8 +41,11 @@ function hideLocation(name) {
  * Async function to fetch server content and add it to DOM.
  */
 async function getServerContent() {
-  var num = "?num="+document.getElementById('display-num').value;
-  const response = await fetch('/data'+num);
+  var num = "?num=" + document.getElementById('display-num').value;
+  var order = "&order=" + document.getElementById('display-order').value;
+  var user = "&user=" + document.getElementById('display-user').value;
+
+  const response = await fetch('/data' + num + order + user);
   const content = await response.text();
   var obj = JSON.parse(content); 
 
@@ -119,7 +122,7 @@ async function deleteComment(comment) {
 }
 
 /**
- * Changes text of selected option then retrieves server content.
+ * Changes text of selected number option then retrieves server content.
  */
 function changeDisplayNum() {
   const selectEl = document.getElementById('display-num');
@@ -129,7 +132,24 @@ function changeDisplayNum() {
       selectEl[i].innerHTML = 'Show: ' + selectEl[i].innerHTML;
     }
     else {
-      selectEl[i].innerHTML = (selectEl[i].innerHTML).replace('Show: ', '');
+      selectEl[i].innerHTML = selectEl[i].innerHTML.replace('Show: ', '');
+    }
+  }
+  getServerContent();
+}
+
+/**
+ * Changes text of selected order option then retrieves server content.
+ */
+function changeDisplayOrder() {
+  const selectEl = document.getElementById('display-order');
+  var index = selectEl.selectedIndex;
+  for(var i = 0; i < selectEl.options.length; i++) {
+    if(index === i) {
+      selectEl[i].innerHTML = 'Order: ' + selectEl[i].innerHTML;
+    }
+    else {
+      selectEl[i].innerHTML = selectEl[i].innerHTML.replace('Order: ', '');
     }
   }
   getServerContent();

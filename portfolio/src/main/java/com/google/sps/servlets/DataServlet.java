@@ -32,6 +32,9 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
@@ -40,12 +43,24 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String num = request.getParameter("num");
+    String order = request.getParameter("order");
+    String user = request.getParameter("user").trim().toUpperCase();
+    
     int displayNum = Integer.MAX_VALUE;
     if(!num.equals("all")) {
       displayNum = Integer.parseInt(num);
     }
 
-    Query query = new Query("Comment").addSort("date", SortDirection.DESCENDING);
+    SortDirection sort = SortDirection.DESCENDING;
+    if(order.equals("oldest")) {
+      sort = SortDirection.ASCENDING;
+    }
+
+    Query query = new Query("Comment").addSort("date", sort);
+
+    if(user != null && !user.equals("")) {
+      query = new Query("Comment").addSort("date", sort).setFilter(new FilterPredicate("username", FilterOperator.EQUAL, user));
+    }
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
@@ -73,9 +88,9 @@ public class DataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the input from the form.
     String comment = request.getParameter("user-comment");
-    String name = request.getParameter("name").trim();
+    String name = request.getParameter("name").trim().toUpperCase();
     if(name.equals("")) {
-      name = "Anonymous";
+      name = "ANONYMOUS";
     }
 
     Entity commentEntity = new Entity("Comment");
