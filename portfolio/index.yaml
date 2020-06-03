@@ -1,0 +1,6 @@
+indexes: 
+  - kind: Comment
+    properties:
+    - name: username
+    - name: date
+      direction: desc
