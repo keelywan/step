@@ -54,6 +54,9 @@ async function getServerContent() {
   clearDiv();
 
   const commentEl = document.getElementById('comment-container');
+  const descriptionSpan = document.createElement('p');
+  descriptionSpan.innerText = 'Showing ' + num + ' of ' + obj.length + ' comments.';
+  commentEl.append(descriptionSpan) ;
   for(var i = 0; i < num; i++) {
     commentEl.appendChild(createCommentElement(obj[i]));
   }
@@ -117,5 +120,19 @@ async function deleteComment(comment) {
   const params = new URLSearchParams();
   params.append('id', comment.id);
   const response = await fetch('/delete-data', {method: 'POST', body: params});
+  getServerContent();
+}
+
+function changeDisplayNum() {
+  const selectEl = document.getElementById('display-num');
+  var index = selectEl.selectedIndex;
+  for(var i = 0; i < selectEl.options.length; i++) {
+    if(index === i) {
+      selectEl[i].innerHTML = 'Show: ' + selectEl[i].innerHTML;
+    }
+    else {
+      selectEl[i].innerHTML = (selectEl[i].innerHTML).replace('Show: ', '');
+    }
+  }
   getServerContent();
 }
