@@ -146,10 +146,10 @@ function changeDisplayOrder() {
   var index = selectEl.selectedIndex;
   for(var i = 0; i < selectEl.options.length; i++) {
     if(index === i) {
-      selectEl[i].innerHTML = 'Order: ' + selectEl[i].innerHTML;
+      selectEl[i].innerHTML = 'Sort By: ' + selectEl[i].innerHTML;
     }
     else {
-      selectEl[i].innerHTML = selectEl[i].innerHTML.replace('Order: ', '');
+      selectEl[i].innerHTML = selectEl[i].innerHTML.replace('Sort By: ', '');
     }
   }
   getServerContent();
