@@ -19,9 +19,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
+import com.google.sps.data.CommentRequest;
 import java.util.Date;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -29,6 +31,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.FetchOptions;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
@@ -36,13 +39,21 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String num = request.getParameter("num");
+    int displayNum = Integer.MAX_VALUE;
+    if(!num.equals("all")) {
+      displayNum = Integer.parseInt(num);
+    }
+
     Query query = new Query("Comment").addSort("date", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
+    int total = results.countEntities(FetchOptions.Builder.withLimit(Integer.MAX_VALUE));
+    List<Entity> resultsLimited = results.asList(FetchOptions.Builder.withLimit(displayNum));
 
     ArrayList<Comment> comments = new ArrayList<>();
-    for (Entity entity : results.asIterable()) {
+    for (Entity entity : resultsLimited) {
       long id = entity.getKey().getId();
       String username = (String) entity.getProperty("username");
       Date date = (Date) entity.getProperty("date");
@@ -51,7 +62,8 @@ public class DataServlet extends HttpServlet {
       Comment comment = new Comment(username, id, date, content);
       comments.add(comment);
     }
-    String json = convertToJSON(comments);
+    CommentRequest res = new CommentRequest(comments, total);
+    String json = convertToJSON(res);
 
     response.setContentType("application/json");
     response.getWriter().println(json);
@@ -79,9 +91,9 @@ public class DataServlet extends HttpServlet {
   }
 
   /**
-   * Convert an ArrayList of Strings into a JSON string using the Gson library.
+   * Converts a CommentRequest into a JSON string using the Gson library.
    */
-  public String convertToJSON(ArrayList<Comment> comments) {
+  public String convertToJSON(CommentRequest comments) {
     Gson gson = new Gson();
     String json = gson.toJson(comments);
     return json;

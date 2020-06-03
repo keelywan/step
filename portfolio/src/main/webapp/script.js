@@ -41,25 +41,20 @@ function hideLocation(name) {
  * Async function to fetch server content and add it to DOM.
  */
 async function getServerContent() {
-  const response = await fetch('/data');
+  var num = "?num="+document.getElementById('display-num').value;
+  const response = await fetch('/data'+num);
   const content = await response.text();
   var obj = JSON.parse(content); 
-
-  var num = document.getElementById('display-num').value;
-  if(num === "all") {
-    num = obj.length;
-  }
-  num = Math.min(obj.length, parseInt(num));
 
   clearDiv();
 
   const commentEl = document.getElementById('comment-container');
   const descriptionSpan = document.createElement('p');
-  descriptionSpan.innerText = 'Showing ' + num + ' of ' + obj.length + ' comments.';
-  commentEl.append(descriptionSpan) ;
-  for(var i = 0; i < num; i++) {
-    commentEl.appendChild(createCommentElement(obj[i]));
-  }
+  descriptionSpan.innerText = 'Showing ' + obj.comments.length + ' of ' + obj.total + ' comments.';
+  commentEl.append(descriptionSpan);
+  obj.comments.forEach((line) => {
+    commentEl.appendChild(createCommentElement(line));
+  });
 }
 
 /** 
@@ -123,6 +118,9 @@ async function deleteComment(comment) {
   getServerContent();
 }
 
+/**
+ * Changes text of selected option then retrieves server content.
+ */
 function changeDisplayNum() {
   const selectEl = document.getElementById('display-num');
   var index = selectEl.selectedIndex;
