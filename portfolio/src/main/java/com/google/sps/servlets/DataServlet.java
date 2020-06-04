@@ -35,6 +35,9 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
@@ -48,6 +51,7 @@ public class DataServlet extends HttpServlet {
     String maxNumberOfComments = request.getParameter("num").toUpperCase();
     String orderOfComments = request.getParameter("order").toUpperCase();
     String user = request.getParameter("user").trim().toUpperCase();
+    String languageCode = request.getParameter("lang");
     
     int numberOfCommentsDisplayed = setCommentLimit(maxNumberOfComments);
     SortDirection sortOrder = setSortStyle(orderOfComments);
@@ -65,6 +69,8 @@ public class DataServlet extends HttpServlet {
       String username = (String) entity.getProperty("username");
       Date date = (Date) entity.getProperty("date");
       String content = (String) entity.getProperty("content");
+
+      content = translateComment(content, languageCode);
 
       Comment comment = new Comment(username, id, date, content);
       comments.add(comment);
@@ -133,5 +139,15 @@ public class DataServlet extends HttpServlet {
       return query.setFilter(new FilterPredicate("username", FilterOperator.EQUAL, username));
     }
     return query;
+  }
+
+  /**
+   * Translates a comment given the language code.
+   */
+  public String translateComment(String originalComment, String languageCode) {
+    Translate translate = TranslateOptions.getDefaultInstance().getService();
+    Translation translation =
+        translate.translate(originalComment, Translate.TranslateOption.targetLanguage(languageCode));
+    return translation.getTranslatedText();
   }
 }
