@@ -162,6 +162,14 @@
           </div>
         </form>
         <input id="display-user" oninput="displayServerContent()" placeholder="Search for a user..." />
+        Language:
+        <select id="display-language" onchange="displayServerContent()">
+          <option value="en">English</option>
+          <option value="es">Spanish</option>
+          <option value="zh">Chinese</option>
+          <option value="fr">French</option>
+          <option value="hi">Hindi</option>
+        </select>
         Sort By:
         <select id="display-order" onchange="displayServerContent()">
           <option value="newest">Newest First</option>
