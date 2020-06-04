@@ -23,7 +23,7 @@ function getImage(name) {
  * Reduces opacity and shows name of location when image is moused over.
  */
 function displayLocation(name) {
-  var [label, img] = getImage(name);
+  const [label, img] = getImage(name);
   label.style.display = 'block';
   img.style.opacity = 0.3; 
 }
@@ -32,32 +32,40 @@ function displayLocation(name) {
  * Hides label and changes opacity back to 1 when mousing out of image. 
  */
 function hideLocation(name) {
-  var [label, img] = getImage(name); 
+  const [label, img] = getImage(name);
   label.style.display = 'none';
   img.style.opacity = 1; 
 }
 
 /**
- * Async function to fetch server content and add it to DOM.
+ * Add server content to DOM.
+ */
+async function displayServerContent() {
+  const serverResults = await getServerContent();
+
+  removeAllCommentsFromPage();
+
+  const commentEl = document.getElementById('comment-container');
+  const descriptionParagraph = document.createElement('p');
+  descriptionParagraph.innerText =
+      'Showing ' + serverResults.comments.length + ' of ' + serverResults.totalComments + ' comments.';
+  commentEl.append(descriptionParagraph);
+  serverResults.comments.forEach((line) => {
+    commentEl.appendChild(createCommentElement(line));
+  });
+}
+
+/**
+ * Async function to fetch and return server content.
  */
 async function getServerContent() {
-  var num = "?num=" + document.getElementById('display-num').value;
-  var order = "&order=" + document.getElementById('display-order').value;
-  var user = "&user=" + document.getElementById('display-user').value;
+  const num = "?num=" + document.getElementById('display-num').value;
+  const order = "&order=" + document.getElementById('display-order').value;
+  const user = "&user=" + document.getElementById('display-user').value;
 
   const response = await fetch('/data' + num + order + user);
   const content = await response.text();
-  var obj = JSON.parse(content); 
-
-  clearDiv();
-
-  const commentEl = document.getElementById('comment-container');
-  const descriptionSpan = document.createElement('p');
-  descriptionSpan.innerText = 'Showing ' + obj.comments.length + ' of ' + obj.total + ' comments.';
-  commentEl.append(descriptionSpan);
-  obj.comments.forEach((line) => {
-    commentEl.appendChild(createCommentElement(line));
-  });
+  return JSON.parse(content);
 }
 
 /** 
@@ -67,13 +75,13 @@ function createCommentElement(comment) {
   const divElement = document.createElement('div');
   divElement.setAttribute('class', 'comment-div');
   
-  const userP = document.createElement("span");
-  userP.innerText = comment.user; 
-  userP.setAttribute('class', 'user-attr');
+  const userSpan = document.createElement("span");
+  userSpan.innerText = comment.user;
+  userSpan.setAttribute('class', 'user-attr');
 
-  const dateP = document.createElement('span');
-  dateP.innerText = comment.commentDate; 
-  dateP.setAttribute('class', 'date-attr');
+  const dateSpan = document.createElement('span');
+  dateSpan.innerText = comment.commentDate;
+  dateSpan.setAttribute('class', 'date-attr');
 
   const deleteButton = document.createElement('button');
   deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
@@ -82,21 +90,21 @@ function createCommentElement(comment) {
     deleteComment(comment);
   });
 
-  const textP = document.createElement('p');
-  textP.innerText = comment.content;
-  textP.setAttribute('class', 'content-attr');
+  const textParagraph = document.createElement('p');
+  textParagraph.innerText = comment.content;
+  textParagraph.setAttribute('class', 'content-attr');
 
-  divElement.appendChild(userP);
+  divElement.appendChild(userSpan);
   divElement.appendChild(deleteButton);
-  divElement.appendChild(dateP); 
-  divElement.appendChild(textP); 
+  divElement.appendChild(dateSpan);
+  divElement.appendChild(textParagraph);
   return divElement;
 }
 
 /**
  * Clears div element containing comments.
  */
-function clearDiv() {
+function removeAllCommentsFromPage() {
   const commentEl = document.getElementById('comment-container');
   while(commentEl.firstChild) {
     commentEl.removeChild(commentEl.firstChild);
@@ -106,9 +114,9 @@ function clearDiv() {
 /**
  * Deletes all comments from Datastore.
  */
-async function deleteAll() {
-  const response = await fetch('/delete-data', {method: 'POST'});
-  getServerContent();
+async function deleteAllComments() {
+  await fetch('/delete-data', {method: 'POST'});
+  displayServerContent();
 }
 
 /**
@@ -117,40 +125,6 @@ async function deleteAll() {
 async function deleteComment(comment) {
   const params = new URLSearchParams();
   params.append('id', comment.id);
-  const response = await fetch('/delete-data', {method: 'POST', body: params});
-  getServerContent();
-}
-
-/**
- * Changes text of selected number option then retrieves server content.
- */
-function changeDisplayNum() {
-  const selectEl = document.getElementById('display-num');
-  var index = selectEl.selectedIndex;
-  for(var i = 0; i < selectEl.options.length; i++) {
-    if(index === i) {
-      selectEl[i].innerHTML = 'Show: ' + selectEl[i].innerHTML;
-    }
-    else {
-      selectEl[i].innerHTML = selectEl[i].innerHTML.replace('Show: ', '');
-    }
-  }
-  getServerContent();
-}
-
-/**
- * Changes text of selected order option then retrieves server content.
- */
-function changeDisplayOrder() {
-  const selectEl = document.getElementById('display-order');
-  var index = selectEl.selectedIndex;
-  for(var i = 0; i < selectEl.options.length; i++) {
-    if(index === i) {
-      selectEl[i].innerHTML = 'Sort By: ' + selectEl[i].innerHTML;
-    }
-    else {
-      selectEl[i].innerHTML = selectEl[i].innerHTML.replace('Sort By: ', '');
-    }
-  }
-  getServerContent();
+  await fetch('/delete-data', {method: 'POST', body: params});
+  displayServerContent();
 }

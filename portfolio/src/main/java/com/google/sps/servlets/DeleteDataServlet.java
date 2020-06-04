@@ -39,18 +39,17 @@ public class DeleteDataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String requestID = request.getParameter("id");
 
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
     if(requestID != null) {
       // Delete specific comment 
       long id = Long.parseLong(requestID);
       Key commentEntityKey = KeyFactory.createKey("Comment", id);
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.delete(commentEntityKey);
     }
     else {
       // Delete all comments 
       Query query = new Query("Comment");
-
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       PreparedQuery results = datastore.prepare(query);
 
       for (Entity entity : results.asIterable()) {

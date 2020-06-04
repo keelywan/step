@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand&family=Nunito&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/906fde76e4.js"></script>
   </head>
-  <body onload="getServerContent()">
+  <body onload="displayServerContent()">
     <div id="nav-bar">
       <a href="#">Home</a>
       <a href="#about-me">About Me</a>
@@ -158,22 +158,24 @@
             <p>Comment:</p>
             <textarea rows="7" name="user-comment" required></textarea>
             <br />
-            <input type="submit" value="Comment" id="comment-button"/>
+            <input type="submit" value="Post!" id="comment-button"/>
           </div>
         </form>
-        <input id="display-user" oninput="getServerContent()" placeholder="Search for a user..." />
-        <select id="display-order" onchange="changeDisplayOrder()">
-          <option value="newest">Sort By: Newest First</option>
+        <input id="display-user" oninput="displayServerContent()" placeholder="Search for a user..." />
+        Sort By:
+        <select id="display-order" onchange="displayServerContent()">
+          <option value="newest">Newest First</option>
           <option value="oldest">Oldest First</option>
         </select>
-        <select id="display-num" onchange="changeDisplayNum()">
-          <option value="5">Show: 5</option>
+        Show:
+        <select id="display-num" onchange="displayServerContent()">
+          <option value="5">5</option>
           <option value="10">10</option>
           <option value="15">15</option>
           <option value="20">20</option>
           <option value="all">All</option>
         </select>
-        <button onclick="deleteAll()">Delete All Comments</button>
+        <button onclick="deleteAllComments()">Delete All Comments</button>
         <div>
           <div id="comment-container"></div>
         </div>

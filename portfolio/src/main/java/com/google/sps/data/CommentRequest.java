@@ -24,11 +24,17 @@ public class CommentRequest {
   /** List of requested comments. */
   private List<Comment> comments;
 
-  /** Total number of comments. */
-  private int total;
+  /**
+   * Total number of comments found from the query. If no limit is set and all comments asked for
+   * are returned, total should be equal to the size of List<Comment> comments. Alternatively, if
+   * the limit is greater than the number of comments returned, then total should also be equal to
+   * the size of List<Comment> comments. Otherwise, only a subset of all the comments found will
+   * be returned to the client.
+   */
+  private int totalComments;
 
-  public CommentRequest(List<Comment> com, int num) {
-    comments = com;
-    total = num;
+  public CommentRequest(List<Comment> commentsToReturn, int maxNumberofComments) {
+    comments = commentsToReturn;
+    totalComments = maxNumberofComments;
   }
 }

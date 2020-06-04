@@ -221,6 +221,7 @@ select {
   border: 1px solid grey;
   border-radius: 0.25rem;
   font-size: 0.9rem;
+  margin: 0 1rem 0 0;
   padding: 0.35rem 0.75rem;
 }
 
@@ -248,6 +249,7 @@ select:hover {
 #display-user{
   border-radius: 0.25rem;
   font: 0.75rem 'Nunito', sans-serif;
+  margin: 0 1rem 0 0;
   padding: 0.35rem 0.75rem;
 }
 
