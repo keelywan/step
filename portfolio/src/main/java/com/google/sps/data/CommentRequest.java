@@ -22,7 +22,8 @@ import java.util.List;
 public class CommentRequest {
 
   /** List containing a strict subset of the comments in Datastore that satisfy the query
-   * if fewer than the total were requested, else all of the comments that satisfy the query.
+   * if fewer than the total were requested, else all of the comments with a maximum of 
+   * MAX_INTEGER.
    */
   private List<Comment> comments;
 
