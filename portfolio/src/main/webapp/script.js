@@ -41,16 +41,16 @@ function hideLocation(name) {
  * Add server content to DOM.
  */
 async function displayServerContent() {
-  const serverResults = await getServerContent();
+  const { comments, totalComments } = await getServerContent();
 
   removeAllCommentsFromPage();
 
   const commentEl = document.getElementById('comment-container');
   const descriptionParagraph = document.createElement('p');
-  descriptionParagraph.innerText =
-      'Showing ' + serverResults.comments.length + ' of ' + serverResults.totalComments + ' comments.';
+  descriptionParagraph.innerText = 
+      'Showing ' + comments.length + ' of ' + totalComments + ' comments.';
   commentEl.append(descriptionParagraph);
-  serverResults.comments.forEach((line) => {
+  comments.forEach((line) => {
     commentEl.appendChild(createCommentElement(line));
   });
 }

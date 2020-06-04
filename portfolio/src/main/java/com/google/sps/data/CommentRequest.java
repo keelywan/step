@@ -21,15 +21,13 @@ import java.util.List;
 /** Class containing requested comment data. */ 
 public class CommentRequest {
 
-  /** List of requested comments. */
+  /** List containing a strict subset of the comments in Datastore that satisfy the query
+   * if fewer than the total were requested, else all of the comments that satisfy the query.
+   */
   private List<Comment> comments;
 
   /**
-   * Total number of comments found from the query. If no limit is set and all comments asked for
-   * are returned, total should be equal to the size of List<Comment> comments. Alternatively, if
-   * the limit is greater than the number of comments returned, then total should also be equal to
-   * the size of List<Comment> comments. Otherwise, only a subset of all the comments found will
-   * be returned to the client.
+   * Total number of comments existing in Datastore that satisfy the query. 
    */
   private int totalComments;
 
