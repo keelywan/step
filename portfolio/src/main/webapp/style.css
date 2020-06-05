@@ -292,3 +292,8 @@ select:hover {
 .content-attr {
   margin: 0;
 }
+
+#hiking-map {
+  width: 50vw;
+  height: 50vh;
+}

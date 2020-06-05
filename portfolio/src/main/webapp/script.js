@@ -129,3 +129,9 @@ async function deleteComment(comment) {
   await fetch('/delete-data', {method: 'POST', body: params});
   displayServerContent();
 }
+
+/** Creates a map and adds it to the page. */
+function createMap() {
+  console.log("called"); 
+  const map = new google.maps.Map(document.getElementById('hiking-map'), {center: {lat: 37.422, lng: -122.084}, zoom: 16});
+}

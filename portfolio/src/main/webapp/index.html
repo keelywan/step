@@ -7,8 +7,9 @@
     <script src="script.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand&family=Nunito&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/906fde76e4.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtUOgoOPElbga5Y4oh0xLYKsbthvAds4Q"></script>
   </head>
-  <body onload="displayServerContent()">
+  <body onload="displayServerContent();createMap()">
     <div id="nav-bar">
       <a href="#">Home</a>
       <a href="#about-me">About Me</a>
@@ -145,6 +146,12 @@
             </div>
           </div>
         </div>
+      </div>
+    </section>
+    <section id="hiking">
+      <div>
+        <h2>~ hiking ~</h2>
+        <div id="hiking-map"></div>
       </div>
     </section>
     <section id="comments">
