@@ -2,5 +2,13 @@ indexes:
   - kind: Comment
     properties:
     - name: username
+      direction: asc
     - name: date
       direction: desc
+
+  - kind: Comment
+    properties: 
+    - name: username
+      direction: asc
+    - name: date
+      direction: asc

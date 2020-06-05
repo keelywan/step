@@ -185,6 +185,29 @@ a i:hover {
   }
 }
 
+/* Hiking Section */
+
+#hiking-map {
+  height: 50vh;
+  margin: 0 auto;
+  width: 50vw;
+}
+
+h3 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.info-window-img {
+  display: block;
+  margin: 0 auto;
+  width: 40%;
+}
+
+.desc {
+  text-align: center;
+}
+
 /* Comment Section */ 
 
 #comment-section {
@@ -291,25 +314,4 @@ select:hover {
 
 .content-attr {
   margin: 0;
-}
-
-#hiking-map {
-  height: 50vh;
-  margin: 0 auto; 
-  width: 50vw;
-}
-
-h3 {
-  margin-top: 0;
-  text-align: center;
-}
-
-.info-window-img {
-  display: block;
-  margin: 0 auto;
-  width: 40%;
-}
-
-.desc {
-  text-align: center;
 }
