@@ -215,13 +215,23 @@ textarea {
   width: 100%;
 }
 
+.required {
+  color: red; 
+}
+
+input:focus, 
+textarea:focus {
+  box-shadow: 0 0 5px 0 #5e9ed6;
+  outline: none; 
+}
+
 button,
 select {
   background-color: #ddd;
   border: 1px solid grey;
   border-radius: 0.25rem;
   font-size: 0.9rem;
-  margin: 0 1rem 0 0;
+  margin: 0 1rem 0.5rem 0;
   padding: 0.35rem 0.75rem;
 }
 
@@ -249,7 +259,7 @@ select:hover {
 #display-user{
   border-radius: 0.25rem;
   font: 0.75rem 'Nunito', sans-serif;
-  margin: 0 1rem 0 0;
+  margin: 0 1rem 0.5rem 0;
   padding: 0.35rem 0.75rem;
 }
 

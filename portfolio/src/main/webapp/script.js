@@ -62,8 +62,9 @@ async function getServerContent() {
   const num = "?num=" + document.getElementById('display-num').value;
   const order = "&order=" + document.getElementById('display-order').value;
   const user = "&user=" + document.getElementById('display-user').value;
+  const langCode = "&lang=" + document.getElementById('display-language').value;
 
-  const response = await fetch('/data' + num + order + user);
+  const response = await fetch('/data' + num + order + user + langCode);
   const content = await response.text();
   return JSON.parse(content);
 }
