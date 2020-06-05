@@ -26,6 +26,10 @@ section {
   width: 80%;
 }
 
+.section-descr {
+  text-align: center;
+}
+
 /* Nav Bar */
 
 #nav-bar {
@@ -202,10 +206,6 @@ h3 {
   display: block;
   margin: 0 auto;
   width: 40%;
-}
-
-.desc {
-  text-align: center;
 }
 
 /* Comment Section */ 

@@ -172,7 +172,7 @@ function createMap() {
 
 function createMarkerAndInfoWindow(map, latitude, longitude, titleDesc, contentDesc) {
   const icon = {
-    url: 'http://maps.google.com/mapfiles/kml/paddle/blu-stars.png',
+    url: 'https://maps.google.com/mapfiles/kml/paddle/blu-stars.png',
     scaledSize: new google.maps.Size(35, 35),
     origin: new google.maps.Point(0,0),
     anchor: new google.maps.Point(0, 0)
