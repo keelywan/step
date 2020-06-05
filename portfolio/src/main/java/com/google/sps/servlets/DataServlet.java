@@ -40,7 +40,7 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  enum Params { OLDEST, ALL }
+  enum Params { OLDEST, ALL, ANONYMOUS }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -84,7 +84,7 @@ public class DataServlet extends HttpServlet {
     String comment = request.getParameter("user-comment");
     String name = request.getParameter("name").trim().toUpperCase();
     if(name.equals("")) {
-      name = "ANONYMOUS";
+      name = Params.ANONYMOUS.toString(); 
     }
 
     Entity commentEntity = new Entity("Comment");

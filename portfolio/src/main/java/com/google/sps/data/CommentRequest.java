@@ -21,7 +21,8 @@ import java.util.List;
 /** Class containing requested comment data. */ 
 public class CommentRequest {
 
-  /** List containing a strict subset of the comments in Datastore that satisfy the query
+  /** 
+   * List containing a strict subset of the comments in Datastore that satisfy the query
    * if fewer than the total were requested, else all of the comments with a maximum of 
    * MAX_INTEGER.
    */
