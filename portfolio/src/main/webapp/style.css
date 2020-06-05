@@ -282,3 +282,7 @@ select:hover {
 .content-attr {
   margin: 0;
 }
+
+.img-attr {
+  max-width: 300px;
+}

@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand&family=Nunito&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/906fde76e4.js"></script>
   </head>
-  <body onload="displayServerContent()">
+  <body onload="fetchBlobstoreUrl()">
     <div id="nav-bar">
       <a href="#">Home</a>
       <a href="#about-me">About Me</a>
@@ -151,12 +151,14 @@
       <div id="comment-section">
         <h2>~ comments ~</h2>
         <br />
-        <form action="/data" method="POST">
+        <form id="my-form" method="POST" enctype="multipart/form-data">
           <div id="input-section">
             <p>Name:</p>
             <input name="name" id="name-input"/>
             <p>Comment:</p>
             <textarea rows="7" name="user-comment" required></textarea>
+            <p>Image</p>
+            <input type="file" name="image" />
             <br />
             <input type="submit" value="Post!" id="comment-button"/>
           </div>

@@ -98,6 +98,14 @@ function createCommentElement(comment) {
   divElement.appendChild(deleteButton);
   divElement.appendChild(dateSpan);
   divElement.appendChild(textParagraph);
+
+  if(comment.imageUrl) {
+    const image = document.createElement('img');
+    image.src = comment.imageUrl;
+    image.setAttribute('class', 'img-attr');
+    divElement.appendChild(image);
+  }
+
   return divElement;
 }
 
@@ -127,4 +135,16 @@ async function deleteComment(comment) {
   params.append('id', comment.id);
   await fetch('/delete-data', {method: 'POST', body: params});
   displayServerContent();
+}
+
+function fetchBlobstoreUrl() {
+  fetch('/blobstore-upload-url')
+      .then((response) => {
+        return response.text();
+      })
+      .then((imageUploadUrl) => {
+        const messageForm = document.getElementById('my-form');
+        messageForm.action = imageUploadUrl;
+        displayServerContent();
+      });
 }

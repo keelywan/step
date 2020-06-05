@@ -35,6 +35,18 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.blobstore.BlobInfo;
+import com.google.appengine.api.blobstore.BlobInfoFactory;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.images.ImagesService;
+import com.google.appengine.api.images.ImagesServiceFactory;
+import com.google.appengine.api.images.ServingUrlOptions;
+import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Map;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
@@ -65,8 +77,9 @@ public class DataServlet extends HttpServlet {
       String username = (String) entity.getProperty("username");
       Date date = (Date) entity.getProperty("date");
       String content = (String) entity.getProperty("content");
+      String imageUrl = (String) entity.getProperty("imageUrl");
 
-      Comment comment = new Comment(username, id, date, content);
+      Comment comment = new Comment(username, id, date, content, imageUrl);
       comments.add(comment);
     }
 
@@ -81,6 +94,7 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the input from the form.
+    String imageUrl = getUploadedFileUrl(request, "image");
     String comment = request.getParameter("user-comment");
     String name = request.getParameter("name").trim().toUpperCase();
     if(name.equals("")) {
@@ -91,6 +105,7 @@ public class DataServlet extends HttpServlet {
     commentEntity.setProperty("username", name);
     commentEntity.setProperty("date", new Date());
     commentEntity.setProperty("content", comment);
+    commentEntity.setProperty("imageUrl", imageUrl);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
@@ -133,5 +148,43 @@ public class DataServlet extends HttpServlet {
       return query.setFilter(new FilterPredicate("username", FilterOperator.EQUAL, username));
     }
     return query;
+  }
+
+  /** Returns a URL that points to the uploaded file, or null if the user didn't upload a file. */
+  private String getUploadedFileUrl(HttpServletRequest request, String formInputElementName) {
+    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+    Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
+    List<BlobKey> blobKeys = blobs.get("image");
+
+    // User submitted form without selecting a file, so we can't get a URL. (dev server)
+    if (blobKeys == null || blobKeys.isEmpty()) {
+      return null;
+    }
+
+    // Our form only contains a single file input, so get the first index.
+    BlobKey blobKey = blobKeys.get(0);
+
+    // User submitted form without selecting a file, so we can't get a URL. (live server)
+    BlobInfo blobInfo = new BlobInfoFactory().loadBlobInfo(blobKey);
+    if (blobInfo.getSize() == 0) {
+      blobstoreService.delete(blobKey);
+      return null;
+    }
+
+    // We could check the validity of the file here, e.g. to make sure it's an image file
+    // https://stackoverflow.com/q/10779564/873165
+
+    // Use ImagesService to get a URL that points to the uploaded file.
+    ImagesService imagesService = ImagesServiceFactory.getImagesService();
+    ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
+
+    // To support running in Google Cloud Shell with AppEngine's devserver, we must use the relative
+    // path to the image, rather than the path returned by imagesService which contains a host.
+    try {
+      URL url = new URL(imagesService.getServingUrl(options));
+      return url.getPath();
+    } catch (MalformedURLException e) {
+      return imagesService.getServingUrl(options);
+    }
   }
 }
