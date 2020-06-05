@@ -136,7 +136,7 @@ async function deleteComment(comment) {
 function createMap() {
   const map = new google.maps.Map(
       document.getElementById('hiking-map'), {
-      center: {lat: 38.8991477, lng: -77.2767716}, zoom: 9});
+      center: {lat: 38.9963263, lng: -77.4272852}, zoom: 9});
 
   const billyGoatString = '<h3>Billy Goat Trail</h3>' +
       '<p>The Billy Goat Trail is located in Great Falls, Maryland. It\'s one of my favorite trails because it ' +
@@ -165,9 +165,18 @@ function createMap() {
 }
 
 function createMarkerAndInfoWindow(map, latitude, longitude, titleDesc, contentDesc) {
+  const icon = {
+    url: 'https://maps.google.com/mapfiles/kml/shapes/hiker.png', // url
+    scaledSize: new google.maps.Size(30, 30), // scaled size
+    origin: new google.maps.Point(0,0), // origin
+    anchor: new google.maps.Point(0, 0) // anchor
+  };
+
   const marker = new google.maps.Marker({
     position: {lat: latitude, lng: longitude},
     map: map,
+    animation: google.maps.Animation.DROP,
+    icon: icon,
     title: titleDesc
   });
   const infoWindow = new google.maps.InfoWindow({content: contentDesc});
