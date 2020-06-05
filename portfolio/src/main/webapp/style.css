@@ -294,6 +294,22 @@ select:hover {
 }
 
 #hiking-map {
-  width: 50vw;
   height: 50vh;
+  margin: 0 auto; 
+  width: 50vw;
+}
+
+h3 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.info-window-img {
+  display: block;
+  margin: 0 auto;
+  width: 40%;
+}
+
+.desc {
+  text-align: center;
 }

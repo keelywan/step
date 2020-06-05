@@ -134,35 +134,44 @@ async function deleteComment(comment) {
  * Creates a map and adds it to the page.
  */
 function createMap() {
-  const map = new google.maps.Map(document.getElementById('hiking-map'), {center: {lat: 39.0693081, lng: -77.2767716}, zoom: 10});
+  const map = new google.maps.Map(
+      document.getElementById('hiking-map'), {
+      center: {lat: 38.8991477, lng: -77.2767716}, zoom: 9});
 
-  const billyGoatMarker = new google.maps.Marker({
-    position: {lat: 38.9931697, lng: -77.3153832},
-    map: map,
-    title: 'Billy Goat Trail'
-  });
+  const billyGoatString = '<h3>Billy Goat Trail</h3>' +
+      '<p>The Billy Goat Trail is located in Great Falls, Maryland. It\'s one of my favorite trails because it ' +
+      'requires climbing over boulders and traversing a rocky terrain - just like a goat! It also has ' +
+      'spectacular views of the Potomac River. For more information, check ' +
+      '<a href="https://www.nps.gov/choh/planyourvisit/billy-goat-trail.htm">here</a>.</p>' +
+      '<img src="/images/billygoat.jpg" class="info-window-img"/>';
+  const bearsDenString = '<h3>Bears Den Overlook</h3>' +
+        '<p>Bear\'s Den is just off the Appalachian Trail. It\'s a fairly short and easy hike that leads to a scenic ' +
+        'overlook. If you want, there are also a network of trails that you can take to lengthen your hike.</p>' +
+        '<img src="/images/bearsden.jpg" class="info-window-img"/>';
+  const skylineDriveString = '<h3>Skyline Drive</h3>' +
+        '<p>Bear\'s Den is just off the Appalachian Trail. It\'s a fairly short and easy hike that leads to a scenic ' +
+        'overlook. If you want, there are also a network of trails that you can take to lengthen your hike.</p>' +
+        '<img src="/images/skyline.jpeg" class="info-window-img"/>';
+  const sugarloafString = '<h3>Sugarloaf Mountain</h3>' +
+        '<p>Sugarloaf Mountain has a variety of trails to suit everyone\'s hiking level. The trails have lots of ' +
+        'inclines, so get ready. Also dog friendly! Check out more information ' +
+        '<a href="https://www.alltrails.com/trail/us/maryland/sugarloaf-mountain-and-northern-peaks-trail">here</a>.</p>' +
+        '<img src="/images/sugarloaf.jpg" class="info-window-img"/>';
 
-  const bearsDenMarker = new google.maps.Marker({
-    position: {lat: 38.9963263, lng: -77.4272852},
-    map: map,
-    title: 'Bears Den Scenic Lookout'
-  });
+  createMarkerAndInfoWindow(map, 38.9931697, -77.3153832, 'Billy Goat Trail', billyGoatString);
+  createMarkerAndInfoWindow(map, 38.9963263, -77.4272852, 'Bears Den', bearsDenString);
+  createMarkerAndInfoWindow(map, 38.6692618, -78.1812651, 'Skyline Drive', skylineDriveString);
+  createMarkerAndInfoWindow(map, 39.2648323, -77.4040018, 'Sugarloaf Mountain', sugarloafString);
+}
 
-  const scottsRunMarker = new google.maps.Marker({
-    position: {lat: 38.961916, lng: -77.1989563},
+function createMarkerAndInfoWindow(map, latitude, longitude, titleDesc, contentDesc) {
+  const marker = new google.maps.Marker({
+    position: {lat: latitude, lng: longitude},
     map: map,
-    title: 'Scott\'s Run'
+    title: titleDesc
   });
-
-  const burkeLakeMarker = new google.maps.Marker({
-    position: {lat: 38.7607889, lng: -77.3096645},
-    map: map,
-    title: 'Burke Lake Park'
-  });
-
-  const sugarloafMountainMarker = new google.maps.Marker({
-    position: {lat: 39.2648323, lng: -77.4040018},
-    map: map,
-    title: 'Sugarloaf Mountain'
-  });
+  const infoWindow = new google.maps.InfoWindow({content: contentDesc});
+  marker.addListener('click', function() {
+    infoWindow.open(map, marker);
+  })
 }
