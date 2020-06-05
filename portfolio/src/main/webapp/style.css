@@ -194,6 +194,7 @@ a i:hover {
 form {
   display: flex;
   justify-content: center;
+  margin: 15px 0;
 }
 
 form p {
@@ -205,11 +206,29 @@ form p {
 }
 
 #name-input {
+  font: 0.75rem 'Nunito', sans-serif;
   width: 20%;
 }
 
 textarea {
+  font: 0.75rem 'Nunito', sans-serif;
   width: 100%;
+}
+
+button,
+select {
+  background-color: #ddd;
+  border: 1px solid grey;
+  border-radius: 0.25rem;
+  font-size: 0.9rem;
+  margin: 0 1rem 0 0;
+  padding: 0.35rem 0.75rem;
+}
+
+button:hover,
+select:hover {
+	background-color: #ccc;
+  cursor: pointer;
 }
 
 #comment-button {
@@ -227,12 +246,32 @@ textarea {
   cursor: pointer;
 }
 
+#display-user{
+  border-radius: 0.25rem;
+  font: 0.75rem 'Nunito', sans-serif;
+  margin: 0 1rem 0 0;
+  padding: 0.35rem 0.75rem;
+}
+
 .comment-div {
   margin: 15px 0;
 }
 
 .user-attr {
   font-weight: bold;
+}
+
+.del-attr {
+  background-color: #eb4034;
+  color: white;
+  float: right;
+  margin: 0 0 0 15px;
+  padding: 0.1rem 0.2rem;
+}
+
+.del-attr:hover {
+  background-color: #cc352b;
+  border-color: #cc352b;
 }
 
 .date-attr {

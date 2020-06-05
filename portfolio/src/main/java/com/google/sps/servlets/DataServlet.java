@@ -19,9 +19,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
+import com.google.sps.data.CommentRequest;
 import java.util.Date;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -29,20 +31,36 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
+  enum Params { OLDEST, ALL, ANONYMOUS }
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Comment").addSort("date", SortDirection.DESCENDING);
+    // Retrieve parameters from request
+    String maxNumberOfComments = request.getParameter("num").toUpperCase();
+    String orderOfComments = request.getParameter("order").toUpperCase();
+    String user = request.getParameter("user").trim().toUpperCase();
+    
+    int numberOfCommentsDisplayed = setCommentLimit(maxNumberOfComments);
+    SortDirection sortOrder = setSortStyle(orderOfComments);
+    Query query = setQuery(sortOrder, user);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
+    List<Entity> resultsLimited = results.asList(FetchOptions.Builder.withLimit(numberOfCommentsDisplayed));
+
+    // Add retrieved comments to ArrayList
     ArrayList<Comment> comments = new ArrayList<>();
-    for (Entity entity : results.asIterable()) {
+    for (Entity entity : resultsLimited) {
       long id = entity.getKey().getId();
       String username = (String) entity.getProperty("username");
       Date date = (Date) entity.getProperty("date");
@@ -51,7 +69,10 @@ public class DataServlet extends HttpServlet {
       Comment comment = new Comment(username, id, date, content);
       comments.add(comment);
     }
-    String json = convertToJSON(comments);
+
+    int totalNumberOfComments = results.countEntities(FetchOptions.Builder.withLimit(Integer.MAX_VALUE));
+    CommentRequest res = new CommentRequest(comments, totalNumberOfComments);
+    String json = convertToJSON(res);
 
     response.setContentType("application/json");
     response.getWriter().println(json);
@@ -61,9 +82,9 @@ public class DataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the input from the form.
     String comment = request.getParameter("user-comment");
-    String name = request.getParameter("name").trim();
+    String name = request.getParameter("name").trim().toUpperCase();
     if(name.equals("")) {
-      name = "Anonymous";
+      name = Params.ANONYMOUS.toString(); 
     }
 
     Entity commentEntity = new Entity("Comment");
@@ -79,11 +100,38 @@ public class DataServlet extends HttpServlet {
   }
 
   /**
-   * Convert an ArrayList of Strings into a JSON string using the Gson library.
+   * Converts a CommentRequest into a JSON string using the Gson library.
    */
-  public String convertToJSON(ArrayList<Comment> comments) {
+  public String convertToJSON(CommentRequest comments) {
     Gson gson = new Gson();
     String json = gson.toJson(comments);
     return json;
+  }
+
+  /**
+   * Returns an int representing the maximum number of comments being requested.
+   */
+  public int setCommentLimit(String numberOfComments) {
+    return numberOfComments.equals(Params.ALL.toString()) ? Integer.MAX_VALUE :
+        Integer.parseInt(numberOfComments);
+  }
+
+  /**
+   * Returns a SortDirection for the order the comments in the query are sorted.
+   */
+  public SortDirection setSortStyle(String orderOfComments) {
+    return orderOfComments.equals(Params.OLDEST.toString()) ? SortDirection.ASCENDING :
+        SortDirection.DESCENDING;
+  }
+
+  /**
+   * Returns a query for Datastore given the sort order and the user's name.
+   */
+  public Query setQuery(SortDirection orderOfComments, String username) {
+    Query query = new Query("Comment").addSort("date", orderOfComments);
+    if(username != null && !username.equals("")) {
+      return query.setFilter(new FilterPredicate("username", FilterOperator.EQUAL, username));
+    }
+    return query;
   }
 }

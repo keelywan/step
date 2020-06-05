@@ -23,8 +23,8 @@ function getImage(name) {
  * Reduces opacity and shows name of location when image is moused over.
  */
 function displayLocation(name) {
-  var [label, img] = getImage(name);
-  label.style.display = "block"; 
+  const [label, img] = getImage(name);
+  label.style.display = 'block';
   img.style.opacity = 0.3; 
 }
 
@@ -32,23 +32,40 @@ function displayLocation(name) {
  * Hides label and changes opacity back to 1 when mousing out of image. 
  */
 function hideLocation(name) {
-  var [label, img] = getImage(name); 
-  label.style.display = "none"; 
+  const [label, img] = getImage(name);
+  label.style.display = 'none';
   img.style.opacity = 1; 
 }
 
 /**
- * Async function to fetch server content and add it to DOM.
+ * Add server content to DOM.
  */
-async function getServerContent() {
-  const response = await fetch('/data');
-  const content = await response.text();
-  var obj = JSON.parse(content); 
+async function displayServerContent() {
+  const { comments, totalComments } = await getServerContent();
+
+  removeAllCommentsFromPage();
 
   const commentEl = document.getElementById('comment-container');
-  obj.forEach((line) => {
+  const descriptionParagraph = document.createElement('p');
+  descriptionParagraph.innerText = 
+      'Showing ' + comments.length + ' of ' + totalComments + ' comments.';
+  commentEl.append(descriptionParagraph);
+  comments.forEach((line) => {
     commentEl.appendChild(createCommentElement(line));
   });
+}
+
+/**
+ * Async function to fetch and return server content.
+ */
+async function getServerContent() {
+  const num = "?num=" + document.getElementById('display-num').value;
+  const order = "&order=" + document.getElementById('display-order').value;
+  const user = "&user=" + document.getElementById('display-user').value;
+
+  const response = await fetch('/data' + num + order + user);
+  const content = await response.text();
+  return JSON.parse(content);
 }
 
 /** 
@@ -56,22 +73,58 @@ async function getServerContent() {
  */
 function createCommentElement(comment) {
   const divElement = document.createElement('div');
-  divElement.setAttribute("class", "comment-div");
+  divElement.setAttribute('class', 'comment-div');
   
-  var userP = document.createElement("span");
-  userP.innerText = comment.user; 
-  userP.setAttribute("class", "user-attr");
+  const userSpan = document.createElement("span");
+  userSpan.innerText = comment.user;
+  userSpan.setAttribute('class', 'user-attr');
 
-  var dateP = document.createElement("span");
-  dateP.innerText = comment.commentDate; 
-  dateP.setAttribute("class", "date-attr");
+  const dateSpan = document.createElement('span');
+  dateSpan.innerText = comment.commentDate;
+  dateSpan.setAttribute('class', 'date-attr');
 
-  var textP = document.createElement("p"); 
-  textP.innerText = comment.content;
-  textP.setAttribute("class", "content-attr");
+  const deleteButton = document.createElement('button');
+  deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+  deleteButton.setAttribute('class', 'del-attr');
+  deleteButton.addEventListener('click', () => {
+    deleteComment(comment);
+  });
 
-  divElement.appendChild(userP);
-  divElement.appendChild(dateP); 
-  divElement.appendChild(textP); 
+  const textParagraph = document.createElement('p');
+  textParagraph.innerText = comment.content;
+  textParagraph.setAttribute('class', 'content-attr');
+
+  divElement.appendChild(userSpan);
+  divElement.appendChild(deleteButton);
+  divElement.appendChild(dateSpan);
+  divElement.appendChild(textParagraph);
   return divElement;
+}
+
+/**
+ * Clears div element containing comments.
+ */
+function removeAllCommentsFromPage() {
+  const commentEl = document.getElementById('comment-container');
+  while(commentEl.firstChild) {
+    commentEl.removeChild(commentEl.firstChild);
+  }
+}
+
+/**
+ * Deletes all comments from Datastore.
+ */
+async function deleteAllComments() {
+  await fetch('/delete-data', {method: 'POST'});
+  displayServerContent();
+}
+
+/**
+ * Deletes specified comment.
+ */
+async function deleteComment(comment) {
+  const params = new URLSearchParams();
+  params.append('id', comment.id);
+  await fetch('/delete-data', {method: 'POST', body: params});
+  displayServerContent();
 }
