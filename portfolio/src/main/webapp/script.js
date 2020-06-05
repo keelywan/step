@@ -130,8 +130,39 @@ async function deleteComment(comment) {
   displayServerContent();
 }
 
-/** Creates a map and adds it to the page. */
+/**
+ * Creates a map and adds it to the page.
+ */
 function createMap() {
-  console.log("called"); 
-  const map = new google.maps.Map(document.getElementById('hiking-map'), {center: {lat: 37.422, lng: -122.084}, zoom: 16});
+  const map = new google.maps.Map(document.getElementById('hiking-map'), {center: {lat: 39.0693081, lng: -77.2767716}, zoom: 10});
+
+  const billyGoatMarker = new google.maps.Marker({
+    position: {lat: 38.9931697, lng: -77.3153832},
+    map: map,
+    title: 'Billy Goat Trail'
+  });
+
+  const bearsDenMarker = new google.maps.Marker({
+    position: {lat: 38.9963263, lng: -77.4272852},
+    map: map,
+    title: 'Bears Den Scenic Lookout'
+  });
+
+  const scottsRunMarker = new google.maps.Marker({
+    position: {lat: 38.961916, lng: -77.1989563},
+    map: map,
+    title: 'Scott\'s Run'
+  });
+
+  const burkeLakeMarker = new google.maps.Marker({
+    position: {lat: 38.7607889, lng: -77.3096645},
+    map: map,
+    title: 'Burke Lake Park'
+  });
+
+  const sugarloafMountainMarker = new google.maps.Marker({
+    position: {lat: 39.2648323, lng: -77.4040018},
+    map: map,
+    title: 'Sugarloaf Mountain'
+  });
 }
