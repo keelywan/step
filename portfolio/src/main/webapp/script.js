@@ -45,13 +45,15 @@ async function displayServerContent() {
 
   removeAllCommentsFromPage();
 
+  const userEmail = document.getElementById('email-input').value; 
+
   const commentEl = document.getElementById('comment-container');
   const descriptionParagraph = document.createElement('p');
   descriptionParagraph.innerText = 
       'Showing ' + comments.length + ' of ' + totalComments + ' comments.';
   commentEl.append(descriptionParagraph);
   comments.forEach((line) => {
-    commentEl.appendChild(createCommentElement(line));
+    commentEl.appendChild(createCommentElement(line, userEmail));
   });
 }
 
@@ -71,7 +73,7 @@ async function getServerContent() {
 /** 
  * Creates a <div> element containing comment information. 
  */
-function createCommentElement(comment) {
+function createCommentElement(comment, email) {
   const divElement = document.createElement('div');
   divElement.setAttribute('class', 'comment-div');
   
@@ -95,7 +97,9 @@ function createCommentElement(comment) {
   textParagraph.setAttribute('class', 'content-attr');
 
   divElement.appendChild(userSpan);
-  divElement.appendChild(deleteButton);
+  if(comment.email === email) {
+    divElement.appendChild(deleteButton);
+  }
   divElement.appendChild(dateSpan);
   divElement.appendChild(textParagraph);
   return divElement;
@@ -139,6 +143,11 @@ async function displayLoginInfo() {
   document.getElementById('login').innerHTML = output;
 
   displayCommentSection(content.loggedIn);
+
+  if(content.loggedIn) {
+    document.getElementById('email-input').value = content.email; 
+    displayServerContent(); 
+  }
 }
 
 /**
@@ -148,12 +157,4 @@ function displayCommentSection(loggedInStatus) {
   const displayStatus = loggedInStatus ? "block": "none";
   document.getElementById('comments').style.display = displayStatus;
   document.getElementById('comments-link').style.display = displayStatus;
-}
-
-/**
- * Retrieve comment and login information from servers then display on page accordingly.
- */
-function initializePage() {
-  displayLoginInfo();
-  displayServerContent();
 }
