@@ -128,3 +128,32 @@ async function deleteComment(comment) {
   await fetch('/delete-data', {method: 'POST', body: params});
   displayServerContent();
 }
+
+/**
+ * Retrieves login status then sets either login or logout link in HTML.
+ */
+async function displayLoginInfo() {
+  const response = await fetch('/auth');
+  const content = JSON.parse(await response.text());
+  const output = content.loggedIn ? '<a href="' + content.logoutUrl + '">Logout</a>' : '<a href="' + content.loginUrl + '">Login</a>';
+  document.getElementById('login').innerHTML = output;
+
+  displayCommentSection(content.loggedIn);
+}
+
+/**
+ * Hide or display comment section depending on login status.
+ */
+function displayCommentSection(loggedInStatus) {
+  const displayStatus = loggedInStatus ? "block": "none";
+  document.getElementById('comments').style.display = displayStatus;
+  document.getElementById('comments-link').style.display = displayStatus;
+}
+
+/**
+ * Retrieve comment and login information from servers then display on page accordingly.
+ */
+function initializePage() {
+  displayLoginInfo();
+  displayServerContent();
+}
