@@ -52,6 +52,10 @@ section {
   transform: scale(1.05);
 }
 
+#login {
+  margin-left: auto;
+}
+
 /* Profile Header */
 
 #header {
