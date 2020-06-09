@@ -1,6 +1,6 @@
 html,
 body {
-  font: 25px 'Nunito', sans-serif;
+  font: 20px 'Nunito', sans-serif;
   height: 100%;
   margin: 0;
   width: 100%;
@@ -313,5 +313,10 @@ select:hover {
 }
 
 .content-attr {
+  margin: 0;
+}
+
+.score-attr {
+  font-style: italic;
   margin: 0;
 }

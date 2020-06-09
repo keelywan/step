@@ -12,6 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const params = {
+  SHOWN: "shown", 
+  HIDDEN: "hidden",
+  HIDEMSG: "View Sentiment Scores",
+  SHOWMSG: "Hide Sentiment Scores"
+}
+
 /**
  * Retrieves image and label information.
  */
@@ -44,14 +51,14 @@ async function displayServerContent() {
   const { comments, totalComments } = await getServerContent();
 
   removeAllCommentsFromPage();
-
+  const showScore = document.getElementById('score-btn').value == params.SHOWN;
   const commentEl = document.getElementById('comment-container');
   const descriptionParagraph = document.createElement('p');
   descriptionParagraph.innerText = 
       'Showing ' + comments.length + ' of ' + totalComments + ' comments.';
   commentEl.append(descriptionParagraph);
   comments.forEach((line) => {
-    commentEl.appendChild(createCommentElement(line));
+    commentEl.appendChild(createCommentElement(line, showScore));
   });
 }
 
@@ -72,7 +79,7 @@ async function getServerContent() {
 /** 
  * Creates a <div> element containing comment information. 
  */
-function createCommentElement(comment) {
+function createCommentElement(comment, showScore) {
   const divElement = document.createElement('div');
   divElement.setAttribute('class', 'comment-div');
   
@@ -99,6 +106,13 @@ function createCommentElement(comment) {
   divElement.appendChild(deleteButton);
   divElement.appendChild(dateSpan);
   divElement.appendChild(textParagraph);
+
+  if(showScore) {
+    const scoreParagraph = document.createElement('p');
+    scoreParagraph.innerText = 'Sentiment Score: ' + comment.score;
+    scoreParagraph.setAttribute('class', 'score-attr');
+    divElement.appendChild(scoreParagraph);
+  }
   return divElement;
 }
 
@@ -203,5 +217,21 @@ function createMarkerAndInfoWindow(map, latitude, longitude, titleDesc, contentD
  */
 function initializePage() {
   createMap();
+  displayServerContent();
+}
+
+/**
+ * Handles display of sentiment scores.
+ */
+async function handleSentimentScores() {
+  const scoreButton = document.getElementById('score-btn');
+  if(scoreButton.value === params.SHOWN) {
+    scoreButton.value = params.HIDDEN;
+    scoreButton.innerHTML = params.HIDEMSG;
+  }
+  else {
+    scoreButton.value = params.SHOWN;
+    scoreButton.innerHTML = params.SHOWMSG;
+  }
   displayServerContent();
 }

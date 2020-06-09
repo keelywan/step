@@ -38,6 +38,9 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import com.google.cloud.language.v1.Sentiment;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
@@ -69,10 +72,11 @@ public class DataServlet extends HttpServlet {
       String username = (String) entity.getProperty("username");
       Date date = (Date) entity.getProperty("date");
       String content = (String) entity.getProperty("content");
+      float score = ((Double) entity.getProperty("score")).floatValue();
 
       content = translateComment(content, languageCode);
 
-      Comment comment = new Comment(username, id, date, content);
+      Comment comment = new Comment(username, id, date, content, score);
       comments.add(comment);
     }
 
@@ -97,6 +101,7 @@ public class DataServlet extends HttpServlet {
     commentEntity.setProperty("username", name);
     commentEntity.setProperty("date", new Date());
     commentEntity.setProperty("content", comment);
+    commentEntity.setProperty("score", getSentimentScore(comment));
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
@@ -149,5 +154,18 @@ public class DataServlet extends HttpServlet {
     Translation translation =
         translate.translate(originalComment, Translate.TranslateOption.targetLanguage(languageCode));
     return translation.getTranslatedText();
+  }
+
+  /**
+   * Computes sentiment score of comment.
+   */
+  public float getSentimentScore(String comment) throws IOException {
+    Document doc =
+        Document.newBuilder().setContent(comment).setType(Document.Type.PLAIN_TEXT).build();
+    LanguageServiceClient languageService = LanguageServiceClient.create();
+    Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+    float score = sentiment.getScore();
+    languageService.close();
+    return score;
   }
 }
