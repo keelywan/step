@@ -140,18 +140,14 @@ async function displayLoginInfo() {
   const response = await fetch('/auth');
   const content = JSON.parse(await response.text());
 
-  displayCommentSection(content.loggedIn);
-
-  // Fill in comment input fields and show comments
   let nickname = "";
   if(content.loggedIn) {
     nickname = await retrieveNickname();
-    document.getElementById('name-input').value = nickname;
-    document.getElementById('email-input').value = content.email;
+    displayCommentSection(nickname, content.email);
     displayServerContent(); 
   }
 
-  // Set navbar content
+  // Set navbar content based on login status
   if(nickname === "") {
     nickname = content.email;
   }
@@ -162,12 +158,13 @@ async function displayLoginInfo() {
 }
 
 /**
- * Hide or display comment section depending on login status.
+ * Display comment section and fill input fields.
  */
-function displayCommentSection(loggedInStatus) {
-  const displayStatus = loggedInStatus ? "block": "none";
-  document.getElementById('comments').style.display = displayStatus;
-  document.getElementById('comments-link').style.display = displayStatus;
+function displayCommentSection(nickname, email) {
+  document.getElementById('comments').style.display = "block";
+  document.getElementById('comments-link').style.display = "block";
+  document.getElementById('name-input').value = nickname;
+  document.getElementById('email-input').value = email;
 }
 
 /**
