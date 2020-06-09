@@ -139,15 +139,26 @@ async function deleteComment(comment) {
 async function displayLoginInfo() {
   const response = await fetch('/auth');
   const content = JSON.parse(await response.text());
-  const output = content.loggedIn ? '<a href="' + content.logoutUrl + '">Logout</a>' : '<a href="' + content.loginUrl + '">Login</a>';
-  document.getElementById('login').innerHTML = output;
 
   displayCommentSection(content.loggedIn);
 
+  // Fill in comment input fields and show comments
+  let nickname = "";
   if(content.loggedIn) {
-    document.getElementById('email-input').value = content.email; 
+    nickname = await retrieveNickname();
+    document.getElementById('name-input').value = nickname;
+    document.getElementById('email-input').value = content.email;
     displayServerContent(); 
   }
+
+  // Set navbar content
+  if(nickname === "") {
+    nickname = content.email;
+  }
+  const output = content.loggedIn
+      ? '<p>Hello, ' + nickname + '! <a href="/nickname">Change</a></p>' + '<a href="' + content.logoutUrl + '">Logout</a>'
+      : '<a href="' + content.loginUrl + '">Login</a>';
+  document.getElementById('login').innerHTML = output;
 }
 
 /**
@@ -157,4 +168,16 @@ function displayCommentSection(loggedInStatus) {
   const displayStatus = loggedInStatus ? "block": "none";
   document.getElementById('comments').style.display = displayStatus;
   document.getElementById('comments-link').style.display = displayStatus;
+}
+
+/**
+ * Retrieve current user's nickname information.
+ */
+async function retrieveNickname() {
+  const response = await fetch('/nickname');
+  const content = await response.text();
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(content, 'text/html');
+  return doc.querySelector('input').value;
 }
