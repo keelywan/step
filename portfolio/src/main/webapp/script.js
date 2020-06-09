@@ -148,11 +148,9 @@ async function displayLoginInfo() {
   }
 
   // Set navbar content based on login status
-  if(nickname === "") {
-    nickname = content.email;
-  }
+  nickname = (nickname === "") ? content.email : nickname;
   const output = content.loggedIn
-      ? '<p>Hello, ' + nickname + '! <a href="/nickname">Change</a></p>' + '<a href="' + content.logoutUrl + '">Logout</a>'
+      ? '<p>Hello, ' + nickname + '! <a href="/nickname">Change</a>' + '<a href="' + content.logoutUrl + '">Logout</a></p>'
       : '<a href="' + content.loginUrl + '">Login</a>';
   document.getElementById('login').innerHTML = output;
 }
