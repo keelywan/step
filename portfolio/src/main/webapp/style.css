@@ -96,6 +96,10 @@ a i:hover {
   transform: scale(1.2);
 }
 
+#login {
+  margin-left: auto;
+}
+
 /* About Section */
 
 .list-item {

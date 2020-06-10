@@ -45,6 +45,7 @@ async function displayServerContent() {
   console.log(authInfo);
   console.log(commentInfo);
   console.log(statusCode);
+  displayLoginInfo(authInfo);
   if(statusCode === 200) {
     const { comments, totalComments } = commentInfo;
 
@@ -221,4 +222,14 @@ function initializePage() {
 function displayCommentSection() {
   document.getElementById('comments').style.display = 'block';
   document.getElementById('comments-link').style.display = 'block';
+}
+
+/** 
+ * Sets login or logout link in nav bar.
+ */
+function displayLoginInfo(authStatus) {
+  const output = authStatus.loggedIn 
+      ? '<a href="' + authStatus.logoutUrl + '">Logout</a>'
+      : '<a href="' + authStatus.loginUrl + '">Login</a>';
+  document.getElementById('login').innerHTML = output;
 }
