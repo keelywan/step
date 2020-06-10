@@ -210,6 +210,14 @@ h3 {
 
 /* Comment Section */ 
 
+#comments {
+  display: none;
+}
+
+#comments-link {
+  display: none;
+}
+
 #comment-section {
   width: 100%;
 }
