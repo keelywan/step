@@ -205,3 +205,29 @@ function initializePage() {
   createMap();
   displayServerContent();
 }
+
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+
+/** Fetches personality data and uses it to create a chart. */
+function drawChart() {
+  fetch('/personality-data').then(response => response.json())
+  .then((personalityVotes) => {
+    const data = new google.visualization.DataTable();
+    data.addColumn('string', 'Personality Type');
+    data.addColumn('number', 'Votes');
+    Object.keys(personalityVotes).forEach((type) => {
+      data.addRow([type, personalityVotes[type]]);
+    });
+
+    const options = {
+      'title': 'Personality Types',
+      'width':600,
+      'height':500
+    };
+
+    const chart = new google.visualization.ColumnChart(
+        document.getElementById('chart-container'));
+    chart.draw(data, options);
+  });
+}
