@@ -12,12 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const params = {
-  SHOWN: "shown", 
-  HIDDEN: "hidden",
-  HIDEMSG: "View Sentiment Scores",
-  SHOWMSG: "Hide Sentiment Scores"
-}
+let showScore = false;
 
 /**
  * Retrieves image and label information.
@@ -51,14 +46,13 @@ async function displayServerContent() {
   const { comments, totalComments } = await getServerContent();
 
   removeAllCommentsFromPage();
-  const showScore = document.getElementById('score-btn').value === params.SHOWN;
   const commentEl = document.getElementById('comment-container');
   const descriptionParagraph = document.createElement('p');
   descriptionParagraph.innerText = 
       'Showing ' + comments.length + ' of ' + totalComments + ' comments.';
   commentEl.append(descriptionParagraph);
   comments.forEach((line) => {
-    commentEl.appendChild(createCommentElement(line, showScore));
+    commentEl.appendChild(createCommentElement(line));
   });
 }
 
@@ -79,7 +73,7 @@ async function getServerContent() {
 /** 
  * Creates a <div> element containing comment information. 
  */
-function createCommentElement(comment, showScore) {
+function createCommentElement(comment) {
   const divElement = document.createElement('div');
   divElement.setAttribute('class', 'comment-div');
   
@@ -223,15 +217,7 @@ function initializePage() {
 /**
  * Handles display of sentiment scores.
  */
-async function handleSentimentScores() {
-  const scoreButton = document.getElementById('score-btn');
-  if(scoreButton.value === params.SHOWN) {
-    scoreButton.value = params.HIDDEN;
-    scoreButton.innerHTML = params.HIDEMSG;
-  }
-  else {
-    scoreButton.value = params.SHOWN;
-    scoreButton.innerHTML = params.SHOWMSG;
-  }
+async function toggleSentimentScore() {
+  showScore = !showScore;
   displayServerContent();
 }
