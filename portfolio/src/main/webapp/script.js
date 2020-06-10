@@ -46,6 +46,7 @@ async function displayServerContent() {
   const { comments, totalComments } = await getServerContent();
 
   removeAllCommentsFromPage();
+  
   const commentEl = document.getElementById('comment-container');
   const descriptionParagraph = document.createElement('p');
   descriptionParagraph.innerText = 
@@ -217,7 +218,7 @@ function initializePage() {
 /**
  * Handles display of sentiment scores.
  */
-async function toggleSentimentScore() {
+function toggleSentimentScore() {
   showScore = !showScore;
   displayServerContent();
 }
