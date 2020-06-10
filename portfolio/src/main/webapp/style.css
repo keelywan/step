@@ -96,6 +96,10 @@ a i:hover {
   transform: scale(1.2);
 }
 
+#login {
+  margin-left: auto;
+}
+
 /* About Section */
 
 .list-item {
@@ -216,6 +220,14 @@ h3 {
 }
 
 /* Comment Section */ 
+
+#comments {
+  display: none;
+}
+
+#comments-link {
+  display: none;
+}
 
 #comment-section {
   width: 100%;

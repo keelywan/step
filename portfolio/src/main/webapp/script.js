@@ -43,18 +43,26 @@ function hideLocation(name) {
  * Add server content to DOM.
  */
 async function displayServerContent() {
-  const { comments, totalComments } = await getServerContent();
+  const [ authInfo, commentInfo, statusCode ] = await getServerContent();
+  console.log(authInfo);
+  console.log(commentInfo);
+  console.log(statusCode);
+  displayLoginInfo(authInfo);
+  if(statusCode === 200) {
+    const { comments, totalComments } = commentInfo;
 
-  removeAllCommentsFromPage();
-  
-  const commentEl = document.getElementById('comment-container');
-  const descriptionParagraph = document.createElement('p');
-  descriptionParagraph.innerText = 
-      'Showing ' + comments.length + ' of ' + totalComments + ' comments.';
-  commentEl.append(descriptionParagraph);
-  comments.forEach((line) => {
-    commentEl.appendChild(createCommentElement(line));
-  });
+    removeAllCommentsFromPage();
+
+    const commentEl = document.getElementById('comment-container');
+    const descriptionParagraph = document.createElement('p');
+    descriptionParagraph.innerText = 
+        'Showing ' + comments.length + ' of ' + totalComments + ' comments.';
+    commentEl.append(descriptionParagraph);
+    comments.forEach((line) => {
+      commentEl.appendChild(createCommentElement(line));
+    });
+    displayCommentSection();
+  }
 }
 
 /**
@@ -68,7 +76,9 @@ async function getServerContent() {
 
   const response = await fetch('/data' + num + order + user + langCode);
   const content = await response.text();
-  return JSON.parse(content);
+  let parsedContent = JSON.parse(content);
+  parsedContent.push(response.status);
+  return parsedContent;
 }
 
 /** 
@@ -252,3 +262,21 @@ function drawChart() {
     chart.draw(data, options);
   });
 }
+
+/**
+ * Display comment section and its navbar link.
+ */
+function displayCommentSection() {
+  document.getElementById('comments').style.display = 'block';
+  document.getElementById('comments-link').style.display = 'block';
+}
+
+/** 
+ * Sets login or logout link in nav bar.
+ */
+function displayLoginInfo(authStatus) {
+  const output = authStatus.loggedIn 
+      ? '<a href="' + authStatus.logoutUrl + '">Logout</a>'
+      : '<a href="' + authStatus.loginUrl + '">Login</a>';
+  document.getElementById('login').innerHTML = output;
+} 

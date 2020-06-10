@@ -41,6 +41,8 @@ import com.google.cloud.translate.Translation;
 import com.google.cloud.language.v1.Document;
 import com.google.cloud.language.v1.LanguageServiceClient;
 import com.google.cloud.language.v1.Sentiment;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
@@ -48,44 +50,56 @@ public class DataServlet extends HttpServlet {
 
   enum Params { OLDEST, ALL, ANONYMOUS }
 
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Retrieve parameters from request
-    String maxNumberOfComments = request.getParameter("num").toUpperCase();
-    String orderOfComments = request.getParameter("order").toUpperCase();
-    String user = request.getParameter("user").trim().toUpperCase();
-    String languageCode = request.getParameter("lang");
-    
-    int numberOfCommentsDisplayed = setCommentLimit(maxNumberOfComments);
-    SortDirection sortOrder = setSortStyle(orderOfComments);
-    Query query = setQuery(sortOrder, user);
-
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery results = datastore.prepare(query);
-
-    List<Entity> resultsLimited = results.asList(FetchOptions.Builder.withLimit(numberOfCommentsDisplayed));
-
-    // Add retrieved comments to ArrayList
-    ArrayList<Comment> comments = new ArrayList<>();
-    for (Entity entity : resultsLimited) {
-      long id = entity.getKey().getId();
-      String username = (String) entity.getProperty("username");
-      Date date = (Date) entity.getProperty("date");
-      String content = (String) entity.getProperty("content");
-      Double score = (Double) entity.getProperty("score");
-
-      content = translateComment(content, languageCode);
-
-      Comment comment = new Comment(username, id, date, content, score);
-      comments.add(comment);
-    }
-
-    int totalNumberOfComments = results.countEntities(FetchOptions.Builder.withLimit(Integer.MAX_VALUE));
-    CommentRequest res = new CommentRequest(comments, totalNumberOfComments);
-    String json = convertToJSON(res);
-
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     response.setContentType("application/json");
-    response.getWriter().println(json);
+    response.getWriter().print("[");
+    // Retrieve authentication status
+    RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/auth");
+    dispatcher.include(request, response);
+    response.setStatus(response.getStatus());
+
+    if(response.getStatus() == HttpServletResponse.SC_FORBIDDEN) {
+      response.getWriter().print(", {}");
+    }
+    else {
+      // Retrieve parameters from request
+      String maxNumberOfComments = request.getParameter("num").toUpperCase();
+      String orderOfComments = request.getParameter("order").toUpperCase();
+      String user = request.getParameter("user").trim().toUpperCase();
+      String languageCode = request.getParameter("lang");
+      
+      int numberOfCommentsDisplayed = setCommentLimit(maxNumberOfComments);
+      SortDirection sortOrder = setSortStyle(orderOfComments);
+      Query query = setQuery(sortOrder, user);
+
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      PreparedQuery results = datastore.prepare(query);
+
+      List<Entity> resultsLimited = results.asList(FetchOptions.Builder.withLimit(numberOfCommentsDisplayed));
+
+      // Add retrieved comments to ArrayList
+      ArrayList<Comment> comments = new ArrayList<>();
+      for (Entity entity : resultsLimited) {
+        long id = entity.getKey().getId();
+        String username = (String) entity.getProperty("username");
+        Date date = (Date) entity.getProperty("date");
+        String content = (String) entity.getProperty("content");
+        Double score = (Double) entity.getProperty("score");
+
+        // content = translateComment(content, languageCode);
+
+        Comment comment = new Comment(username, id, date, content, score);
+        comments.add(comment);
+      }
+
+      int totalNumberOfComments = results.countEntities(FetchOptions.Builder.withLimit(Integer.MAX_VALUE));
+      CommentRequest res = new CommentRequest(comments, totalNumberOfComments);
+      String json = convertToJSON(res);
+
+      response.getWriter().print(",");
+      response.getWriter().println(json);
+    }
+    response.getWriter().print("]");
   }
 
   @Override
