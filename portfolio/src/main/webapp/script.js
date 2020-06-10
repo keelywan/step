@@ -129,3 +129,79 @@ async function deleteComment(comment) {
   await fetch('/delete-data', {method: 'POST', body: params});
   displayServerContent();
 }
+
+/**
+ * Creates a map and adds it to the page.
+ */
+function createMap() {
+  const map = new google.maps.Map(
+      document.getElementById('hiking-map'), {
+      center: {lat: 38.9963263, lng: -77.4272852}, zoom: 9});
+
+  const billyGoatString = '<h3>Billy Goat Trail</h3>' +
+      '<p>The Billy Goat Trail is located in Great Falls, Maryland. It\'s one of my favorite trails ' +
+      'because it requires climbing over boulders and traversing a rocky terrain - just like a goat! ' +
+      'It also has spectacular views of the Potomac River. For more information, check ' +
+      '<a href="https://www.nps.gov/choh/planyourvisit/billy-goat-trail.htm">here</a>.</p>' +
+      '<img src="/images/billygoat.jpg" class="info-window-img"/>';
+  const bearsDenString = '<h3>Bears Den Overlook</h3>' +
+      '<p>Bear\'s Den is just off the Appalachian Trail. It\'s a fairly short and easy hike that leads ' +
+      'to a scenic overlook. If you want, there are also a network of trails that you can take to lengthen ' +
+      'your hike.</p>' +
+      '<img src="/images/bearsden.jpg" class="info-window-img"/>';
+  const skylineDriveString = '<h3>Stony Man</h3>' +
+      '<p>Stony Man is a short and easy hike in Shenandoah National Park. This trail will take you to ' +
+      'the summit of Stony Man Mountain where you can capture amazing views of the Shenandoah Valley. ' +
+      'There are also tons of other trails in Shenandoah National Park that are worth checking out!' +
+      '<img src="/images/skyline.jpeg" class="info-window-img"/>';
+  const sugarloafString = '<h3>Sugarloaf Mountain</h3>' +
+      '<p>Sugarloaf Mountain has a variety of trails to suit everyone\'s hiking level. The trails have ' +
+      'lots of inclines, so get ready. Also dog friendly! Check out more information ' +
+      '<a href="https://www.alltrails.com/trail/us/maryland/sugarloaf-mountain-and-northern-peaks-trail">' +
+      'here</a>.</p>' +
+      '<img src="/images/sugarloaf.jpg" class="info-window-img"/>';
+  const restonString = '<h3>Reston Trails</h3>' +
+      '<p>Reston has miles of paved and natural pathways that connect neighborhoods, recreation areas, ' +
+      'and shopping centers. My family loves to come here to walk because of the shaded paths and close ' +
+      'proximity to our home. Here\'s a link to all the ' +
+      '<a href="https://www.reston.org/Parks,RecreationEvents/Pathways/tabid/418/Default.aspx">trail maps</a>.</p>';
+
+  createMarkerAndInfoWindow(map, 38.9931697, -77.3153832, 'Billy Goat Trail', billyGoatString);
+  createMarkerAndInfoWindow(map, 38.9963263, -77.4272852, 'Bears Den', bearsDenString);
+  createMarkerAndInfoWindow(map, 38.6106997, -78.365843, 'Stony Man', skylineDriveString);
+  createMarkerAndInfoWindow(map, 39.2648323, -77.4040018, 'Sugarloaf Mountain', sugarloafString);
+  createMarkerAndInfoWindow(map, 38.92485, -77.3716722, 'Reston Trails', restonString);
+}
+
+/**
+ * Adds a marker and corresponding info window to map.
+ */
+function createMarkerAndInfoWindow(map, latitude, longitude, titleDesc, contentDesc) {
+  const icon = {
+    url: 'https://maps.google.com/mapfiles/kml/paddle/blu-stars.png',
+    scaledSize: new google.maps.Size(35, 35),
+    origin: new google.maps.Point(0,0),
+    anchor: new google.maps.Point(0, 0)
+  };
+
+  const marker = new google.maps.Marker({
+    position: {lat: latitude, lng: longitude},
+    map: map,
+    animation: google.maps.Animation.DROP,
+    icon: icon,
+    title: titleDesc
+  });
+
+  const infoWindow = new google.maps.InfoWindow({content: contentDesc});
+  marker.addListener('click', function() {
+    infoWindow.open(map, marker);
+  })
+}
+
+/**
+ * Initializes elements on page on load.
+ */
+function initializePage() {
+  createMap();
+  displayServerContent();
+}
