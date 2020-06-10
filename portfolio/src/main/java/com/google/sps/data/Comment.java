@@ -32,9 +32,9 @@ public class Comment {
   private String content; 
 
   /** Sentiment score of comment. */
-  private float score;
+  private Double score;
 
-  public Comment(String username, long commentID, Date postTime, String comment, float sentimentScore) {
+  public Comment(String username, long commentID, Date postTime, String comment, Double sentimentScore) {
     user = username; 
     id = commentID;
     commentDate = postTime; 

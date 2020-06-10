@@ -72,7 +72,7 @@ public class DataServlet extends HttpServlet {
       String username = (String) entity.getProperty("username");
       Date date = (Date) entity.getProperty("date");
       String content = (String) entity.getProperty("content");
-      float score = ((Double) entity.getProperty("score")).floatValue();
+      Double score = (Double) entity.getProperty("score");
 
       content = translateComment(content, languageCode);
 
