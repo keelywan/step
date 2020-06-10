@@ -70,7 +70,7 @@ public class DataServlet extends HttpServlet {
       Date date = (Date) entity.getProperty("date");
       String content = (String) entity.getProperty("content");
 
-      content = translateComment(content, languageCode);
+      // content = translateComment(content, languageCode);
 
       Comment comment = new Comment(username, id, date, content);
       comments.add(comment);
