@@ -74,7 +74,7 @@ public class DataServlet extends HttpServlet {
       String content = (String) entity.getProperty("content");
       Double score = (Double) entity.getProperty("score");
 
-      content = translateComment(content, languageCode);
+      // content = translateComment(content, languageCode);
 
       Comment comment = new Comment(username, id, date, content, score);
       comments.add(comment);
