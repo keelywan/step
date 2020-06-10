@@ -50,6 +50,7 @@ public class DataServlet extends HttpServlet {
 
   enum Params { OLDEST, ALL, ANONYMOUS }
 
+  @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     response.setContentType("application/json");
     response.getWriter().print("[");

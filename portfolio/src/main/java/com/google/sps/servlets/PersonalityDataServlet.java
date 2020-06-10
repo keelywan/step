@@ -23,16 +23,32 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
 
 
 @WebServlet("/personality-data")
 public class PersonalityDataServlet extends HttpServlet {
 
-  private Map<String, Integer> personalityTypeVotes = new HashMap<>();
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    Query query = new Query("Personality");
+    PreparedQuery results = datastore.prepare(query);
+
+    Map<String, Long> personalityTypeVotes = new HashMap<>();
+
+    for(Entity personalityEntity: results.asIterable()) {
+      String type = (String) personalityEntity.getProperty("type");
+      Long numVotes = (Long) personalityEntity.getProperty("votes");
+      personalityTypeVotes.put(type, numVotes);
+    }
+
     Gson gson = new Gson();
     String json = gson.toJson(personalityTypeVotes);
     response.getWriter().println(json);
@@ -41,10 +57,30 @@ public class PersonalityDataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String personalityType = request.getParameter("type");
-    int currentVotes = 
-        personalityTypeVotes.containsKey(personalityType) ? personalityTypeVotes.get(personalityType) : 0;
-    personalityTypeVotes.put(personalityType, currentVotes + 1);
+
+    Long currentVotes = getNumberOfVotes(personalityType);
+
+    Entity personalityEntity = new Entity("Personality", personalityType);
+    personalityEntity.setProperty("type", personalityType);
+    personalityEntity.setProperty("votes", currentVotes + 1);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(personalityEntity);
 
     response.sendRedirect("/");
+  }
+
+  private long getNumberOfVotes(String personalityType) {
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    Query query =
+        new Query("Personality")
+            .setFilter(new Query.FilterPredicate("type", Query.FilterOperator.EQUAL, personalityType));
+    PreparedQuery results = datastore.prepare(query);
+    Entity entity = results.asSingleEntity();
+    if (entity == null) {
+      return 0;
+    }
+    Long numVotes = (Long) entity.getProperty("votes");
+    return numVotes;
   }
 }
