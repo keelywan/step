@@ -173,6 +173,9 @@ function createMap() {
   createMarkerAndInfoWindow(map, 38.92485, -77.3716722, 'Reston Trails', restonString);
 }
 
+/**
+ * Adds a marker and corresponding info window to map.
+ */
 function createMarkerAndInfoWindow(map, latitude, longitude, titleDesc, contentDesc) {
   const icon = {
     url: 'https://maps.google.com/mapfiles/kml/paddle/blu-stars.png',
@@ -193,4 +196,12 @@ function createMarkerAndInfoWindow(map, latitude, longitude, titleDesc, contentD
   marker.addListener('click', function() {
     infoWindow.open(map, marker);
   })
+}
+
+/**
+ * Initializes elements on page on load.
+ */
+function initializePage() {
+  createMap();
+  displayServerContent();
 }
