@@ -52,15 +52,7 @@ async function displayServerContent() {
     const { comments, totalComments } = commentInfo;
 
     removeAllCommentsFromPage();
-
-    const commentEl = document.getElementById('comment-container');
-    const descriptionParagraph = document.createElement('p');
-    descriptionParagraph.innerText = 
-        'Showing ' + comments.length + ' of ' + totalComments + ' comments.';
-    commentEl.append(descriptionParagraph);
-    comments.forEach((line) => {
-      commentEl.appendChild(createCommentElement(line));
-    });
+    addComments(comments, totalComments, authInfo.email);
     displayCommentSection();
   }
 }
@@ -81,10 +73,24 @@ async function getServerContent() {
   return parsedContent;
 }
 
+/**
+ * Add all comments from server to HTML page.
+ */
+function addComments(comments, totalComments, email) {
+  const commentEl = document.getElementById('comment-container');
+  const descriptionParagraph = document.createElement('p');
+  descriptionParagraph.innerText =
+      'Showing ' + comments.length + ' of ' + totalComments + ' comments.';
+  commentEl.append(descriptionParagraph);
+  comments.forEach((line) => {
+    commentEl.appendChild(createCommentElement(line, email));
+  });
+}
+
 /** 
  * Creates a <div> element containing comment information. 
  */
-function createCommentElement(comment) {
+function createCommentElement(comment, email) {
   const divElement = document.createElement('div');
   divElement.setAttribute('class', 'comment-div');
   
@@ -96,19 +102,20 @@ function createCommentElement(comment) {
   dateSpan.innerText = comment.commentDate;
   dateSpan.setAttribute('class', 'date-attr');
 
-  const deleteButton = document.createElement('button');
-  deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
-  deleteButton.setAttribute('class', 'del-attr');
-  deleteButton.addEventListener('click', () => {
-    deleteComment(comment);
-  });
-
   const textParagraph = document.createElement('p');
   textParagraph.innerText = comment.content;
   textParagraph.setAttribute('class', 'content-attr');
 
   divElement.appendChild(userSpan);
-  divElement.appendChild(deleteButton);
+  if(email === comment.email) {
+    const deleteButton = document.createElement('button');
+    deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+    deleteButton.setAttribute('class', 'del-attr');
+    deleteButton.addEventListener('click', () => {
+      deleteComment(comment);
+    });
+    divElement.appendChild(deleteButton);
+  }
   divElement.appendChild(dateSpan);
   divElement.appendChild(textParagraph);
 

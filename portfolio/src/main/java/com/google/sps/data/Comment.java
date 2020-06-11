@@ -34,11 +34,15 @@ public class Comment {
   /** Sentiment score of comment. */
   private Double score;
 
-  public Comment(String username, long commentID, Date postTime, String comment, Double sentimentScore) {
+  /** User's email address. */
+  private String email;
+
+  public Comment(String username, long commentID, Date postTime, String comment, Double sentimentScore, String userEmail) {
     user = username; 
     id = commentID;
     commentDate = postTime; 
     content = comment;
     score = sentimentScore;
+    email = userEmail;
   }
 }
