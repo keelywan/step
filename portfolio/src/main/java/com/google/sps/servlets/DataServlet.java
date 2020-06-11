@@ -82,10 +82,11 @@ public class DataServlet extends HttpServlet {
         String username = (String) entity.getProperty("username");
         Date date = (Date) entity.getProperty("date");
         String content = (String) entity.getProperty("content");
+        String email = (String) entity.getProperty("email");
 
         // content = translateComment(content, languageCode);
 
-        Comment comment = new Comment(username, id, date, content);
+        Comment comment = new Comment(username, id, date, content, email);
         comments.add(comment);
       }
 
@@ -104,6 +105,7 @@ public class DataServlet extends HttpServlet {
     // Get the input from the form.
     String comment = request.getParameter("user-comment");
     String name = request.getParameter("name").trim().toUpperCase();
+    String email = request.getParameter("email");
     if(name.equals("")) {
       name = Params.ANONYMOUS.toString(); 
     }
@@ -112,6 +114,7 @@ public class DataServlet extends HttpServlet {
     commentEntity.setProperty("username", name);
     commentEntity.setProperty("date", new Date());
     commentEntity.setProperty("content", comment);
+    commentEntity.setProperty("email", email);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);

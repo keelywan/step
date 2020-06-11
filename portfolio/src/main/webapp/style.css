@@ -245,6 +245,10 @@ form p {
   width: 20%;
 }
 
+#email-input {
+  display: none;
+}
+
 textarea {
   font: 0.75rem 'Nunito', sans-serif;
   width: 100%;

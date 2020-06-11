@@ -31,10 +31,14 @@ public class Comment {
   /** Comment text. */
   private String content; 
 
-  public Comment(String username, long commentID, Date postTime, String comment) {
+  /** User's email address. */
+  private String email;
+
+  public Comment(String username, long commentID, Date postTime, String comment, String userEmail) {
     user = username; 
     id = commentID; 
     commentDate = postTime; 
-    content = comment; 
+    content = comment;
+    email = userEmail;
   }
 }
