@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+let showScore = false;
+
 /**
  * Retrieves image and label information.
  */
@@ -44,7 +46,7 @@ async function displayServerContent() {
   const { comments, totalComments } = await getServerContent();
 
   removeAllCommentsFromPage();
-
+  
   const commentEl = document.getElementById('comment-container');
   const descriptionParagraph = document.createElement('p');
   descriptionParagraph.innerText = 
@@ -99,6 +101,13 @@ function createCommentElement(comment) {
   divElement.appendChild(deleteButton);
   divElement.appendChild(dateSpan);
   divElement.appendChild(textParagraph);
+
+  if(showScore) {
+    const scoreParagraph = document.createElement('p');
+    scoreParagraph.innerText = 'Sentiment Score: ' + comment.score;
+    scoreParagraph.setAttribute('class', 'score-attr');
+    divElement.appendChild(scoreParagraph);
+  }
   return divElement;
 }
 
@@ -136,7 +145,7 @@ async function deleteComment(comment) {
 function createMap() {
   const map = new google.maps.Map(
       document.getElementById('hiking-map'), {
-      center: {lat: 38.9963263, lng: -77.4272852}, zoom: 9});
+      center: {lat: 38.8761607, lng: -77.481413}, zoom: 9});
 
   const billyGoatString = '<h3>Billy Goat Trail</h3>' +
       '<p>The Billy Goat Trail is located in Great Falls, Maryland. It\'s one of my favorite trails ' +
@@ -203,5 +212,13 @@ function createMarkerAndInfoWindow(map, latitude, longitude, titleDesc, contentD
  */
 function initializePage() {
   createMap();
+  displayServerContent();
+}
+
+/**
+ * Handles display of sentiment scores.
+ */
+function toggleSentimentScore() {
+  showScore = !showScore;
   displayServerContent();
 }

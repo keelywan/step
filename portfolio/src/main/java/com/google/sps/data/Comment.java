@@ -31,10 +31,14 @@ public class Comment {
   /** Comment text. */
   private String content; 
 
-  public Comment(String username, long commentID, Date postTime, String comment) {
+  /** Sentiment score of comment. */
+  private Double score;
+
+  public Comment(String username, long commentID, Date postTime, String comment, Double sentimentScore) {
     user = username; 
-    id = commentID; 
+    id = commentID;
     commentDate = postTime; 
-    content = comment; 
+    content = comment;
+    score = sentimentScore;
   }
 }
