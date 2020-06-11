@@ -97,7 +97,22 @@ a i:hover {
 }
 
 #login {
+  display: flex;
+  flex-direction: column;
   margin-left: auto;
+}
+
+#login a {
+  font-size: 2.5vh;
+  margin-left: 0;
+  text-align: end;
+  text-decoration: underline;
+}
+
+#login p {
+  color: white;
+  font-size: 2.5vh;
+  margin: 0;
 }
 
 /* About Section */
@@ -190,6 +205,11 @@ a i:hover {
 
   #links a {
     font-size: 2.5vh;
+  }
+
+  #login a,
+  #login p {
+    font-size: 2vh;
   }
 }
 

@@ -88,7 +88,7 @@ public class DataServlet extends HttpServlet {
         Double score = (Double) entity.getProperty("score");
         String email = (String) entity.getProperty("email");
 
-        // content = translateComment(content, languageCode);
+        content = translateComment(content, languageCode);
 
         Comment comment = new Comment(username, id, date, content, score, email);
         comments.add(comment);

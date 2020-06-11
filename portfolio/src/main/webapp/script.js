@@ -44,9 +44,6 @@ function hideLocation(name) {
  */
 async function displayServerContent() {
   const [ authInfo, commentInfo, statusCode ] = await getServerContent();
-  console.log(authInfo);
-  console.log(commentInfo);
-  console.log(statusCode);
   displayLoginInfo(authInfo);
   if(statusCode === 200) {
     const { comments, totalComments } = commentInfo;
@@ -281,9 +278,34 @@ function displayCommentSection() {
 /** 
  * Sets login or logout link in nav bar.
  */
-function displayLoginInfo(authStatus) {
-  const output = authStatus.loggedIn 
-      ? '<a href="' + authStatus.logoutUrl + '">Logout</a>'
+async function displayLoginInfo(authStatus) {
+  let nickname = "";
+  if(authStatus.loggedIn) {
+    document.getElementById('email-input').value = authStatus.email; 
+    nickname = await retrieveNickname();
+    document.getElementById('name-input').value = nickname;
+    document.getElementById('email-input').value = authStatus.email;
+    displayServerContent(); 
+  }
+
+  // Set navbar content
+  if(nickname === "") {
+    nickname = authStatus.email;
+  }
+  const output = authStatus.loggedIn
+      ? '<p>Hello, ' + nickname + '! <a href="/nickname">Change</a>' + '<a href="' + authStatus.logoutUrl + '">Logout</a></p>'
       : '<a href="' + authStatus.loginUrl + '">Login</a>';
   document.getElementById('login').innerHTML = output;
-} 
+}
+
+/**
+ * Retrieve current user's nickname information.
+ */
+async function retrieveNickname() {
+  const response = await fetch('/nickname');
+  const content = await response.text();
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(content, 'text/html');
+  return doc.querySelector('input').value;
+}
