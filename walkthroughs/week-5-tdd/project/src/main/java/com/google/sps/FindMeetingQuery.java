@@ -18,48 +18,78 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Comparator;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    HashSet<TimeRange> meetingTimes = new HashSet<>();
+    ArrayList<TimeRange> meetingTimes = new ArrayList<>();
     long duration = request.getDuration();
     if(duration > TimeRange.WHOLE_DAY.duration() || duration < 0) {
       return meetingTimes;
     }
 
-    Collection<String> attendees = request.getAttendees();
+    ArrayList<String> attendees = new ArrayList<String>(request.getAttendees());
     ArrayList<Event> eventsList = new ArrayList<Event>(events);
-    printEventList(eventsList);
+    ArrayList<TimeRange> timesList = filterEventsAndGetTimes(eventsList, attendees);
 
-    Comparator<Event> compareByStartTime = (Event e1, Event e2) -> e1.getWhen().start() - e2.getWhen().start();
-    Collections.sort(eventsList, compareByStartTime);
-    printEventList(eventsList);
+    Collections.sort(timesList, TimeRange.ORDER_BY_START);
 
     int curTime = 0;
     int listIndex = 0;
-    while(curTime + duration < TimeRange.END_OF_DAY && listIndex < eventsList.size()) {
-
+    while(listIndex < timesList.size()) {
+      if(curTime + duration > TimeRange.END_OF_DAY) {
+        return meetingTimes;
+      }
+      TimeRange timeInterval = timesList.get(listIndex);
+      int startTime = timeInterval.start();
+      int endTime = timeInterval.end();
+      int diff = startTime - curTime; 
+      if(diff >= duration) {
+        meetingTimes.add(TimeRange.fromStartDuration(curTime, diff));
+        curTime = endTime;
+      } else {
+        curTime = Math.max(curTime, endTime);
+      }
+      listIndex++;
     }
+    if(TimeRange.END_OF_DAY - curTime + 1 >= duration) {
+      meetingTimes.add(TimeRange.fromStartDuration(curTime, TimeRange.END_OF_DAY - curTime + 1));
+    }
+    /**
+     * go through list of events
+     * if the current time + duration is past the end of the day, return the list of times 
+     * if we reach the end of the list, check to see if there is time after htat  
+     */
 
     return meetingTimes;
-    // throw new UnsupportedOperationException("TODO: Implement this method.");
-    // Check time request.getDuration() should be greater than 0, less than 24
-    // Sort events in order of start times -- DONE (does this need to be done?)
-    // Find events with all attendees? Does this need to be done? -- for now, assume events have at least one of the attendees
-    // Merge together adjacent or overlapping events
-    // Find empty blocks 
-    // while time + duration < TimeRange.END_OF_DAY
   }
 
-  // Merge overlapping events -- only pass if list is greater than 1
-  public ArrayList<Event> mergeEvents(ArrayList<Event> events) {
-    int startTime = events.get(0).getWhen().start();
-    int endTime = events.get(0).getWhen().end();
-    for(int i = 1; i < events.size(); i++) {
-
+  /**
+   * Filter out events that don't have meeting attendees in it and return list of TimeRanges.
+   */
+  private ArrayList<TimeRange> filterEventsAndGetTimes(ArrayList<Event> events, ArrayList<String> attendees) {
+    ArrayList<TimeRange> filteredTimes = new ArrayList<TimeRange>();
+    for(int i = 0; i < events.size(); i++) {
+      Event event = events.get(i);
+      ArrayList<String> eventAttendees = new ArrayList<String>(event.getAttendees());
+      if(hasIntersection(eventAttendees, attendees)) {
+        filteredTimes.add(event.getWhen());
+      }
     }
-    return null;
+    return filteredTimes; 
+  }
+
+  /**
+   * Determine if there is an intersection between event attendees and meeting attendees.
+   */
+  private boolean hasIntersection(ArrayList<String> eventAttendees, ArrayList<String> meetingAttendees) {
+    for(int i = 0; i < meetingAttendees.size(); i++) {
+      if(eventAttendees.contains(meetingAttendees.get(i))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   // Debugging purposes  
