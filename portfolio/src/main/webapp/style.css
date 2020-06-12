@@ -182,7 +182,7 @@ a i:hover {
   z-index: 99;
 } 
 
-@media only screen and (min-height: 750px) {
+@media only screen and (min-height: 800px) {
   body {
     font-size: 25px;
   }
