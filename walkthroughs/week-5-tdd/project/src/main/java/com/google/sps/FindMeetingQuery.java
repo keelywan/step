@@ -61,6 +61,10 @@ public final class FindMeetingQuery {
      * if the current time + duration is past the end of the day, return the list of times 
      * if we reach the end of the list, check to see if there is time after htat  
      */
+    /**
+     * if list of required attendees is empty, add the optional attendees
+     * add optional attendees then find meeting slots, if there are none, remove them
+     */
 
     return meetingTimes;
   }
