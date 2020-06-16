@@ -244,7 +244,7 @@ function drawChart() {
       'title': 'Personality Types',
       'width':600,
       'height':500,
-      legend: { position: "none" }
+      'legend': { position: 'none' }
     };
 
     const chart = new google.visualization.ColumnChart(
