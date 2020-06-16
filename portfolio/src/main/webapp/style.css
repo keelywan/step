@@ -208,6 +208,13 @@ h3 {
   width: 40%;
 }
 
+/* Chart Section */
+
+#chart-container {
+  display: flex;
+  justify-content: center;
+}
+
 /* Comment Section */ 
 
 #comment-section {

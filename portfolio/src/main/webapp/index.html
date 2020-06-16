@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>My Portfolio</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="script.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand&family=Nunito&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/906fde76e4.js"></script>
@@ -15,6 +16,7 @@
       <a href="#about-me">About Me</a>
       <a href="#travel">Travel</a>
       <a href="#hiking">Hiking</a>
+      <a href="#personality">Personality Chart</a>
       <a href="#comments">Comments</a>
     </div>
     <section>
@@ -159,6 +161,47 @@
           I've been trying to stay active by walking and hiking. These are just a few of the trails I've gone on.
         </p>
         <div id="hiking-map"></div>
+      </div>
+    </section>
+    <section id="personality">
+      <div>
+        <h2>~ personality type chart ~</h2>
+        <p class="section-descr">
+          What's your Myers-Briggs Type Indicator personality type? There are four dimensions: 
+        </p>
+        <p>
+          <ul>
+            <li>Where you focus your attention - extraversion (E) or introversion(I)</li>
+            <li>The way you take in information - sensing (S) or intuition (N)</li>
+            <li>How you make decisions - thinking (T) or feeling (F)</li>
+            <li>How you deal with the world - judging (J) or perceiving (P)</li>
+          </ul>
+        </p>
+        <p class="section-descr">
+          Take the test <a href="https://www.16personalities.com/free-personality-test">here</a>!
+        </p>
+        <div id="chart-container"></div>
+        <form action="/personality-data" method="POST">
+        <select name="type">
+          <option value="INTJ">Architect (INTJ)</option>
+          <option value="INTP">Logician (INTP)</option>
+          <option value="ENTJ">Commander (ENTJ)</option>
+          <option value="ENTP">Debater (ENTP)</option>
+          <option value="INFJ">Advocate (INFJ)</option>
+          <option value="INFP">Mediator (INFP)</option>
+          <option value="ENFJ">Protagonist (ENFJ)</option>
+          <option value="ENFP">Campaigner (ENFP)</option>
+          <option value="ISTJ">Logistician (ISTJ)</option>
+          <option value="ISFJ">Defender (ISFJ)</option>
+          <option value="ESTJ">Executive (ESTJ)</option>
+          <option value="ESFJ">Consul (ESFJ)</option>
+          <option value="ISTP">Virtuoso (ISTP)</option>
+          <option value="ISFP">Adventurer (ISFP)</option>
+          <option value="ESTP">Entrepreneur (ESTP)</option>
+          <option value="ESFP">Entertainer (ESFP)</option>
+        </select>
+        <button>Submit</button>
+      </form>
       </div>
     </section>
     <section id="comments">
