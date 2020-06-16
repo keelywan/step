@@ -72,9 +72,8 @@ public class PersonalityDataServlet extends HttpServlet {
 
   private long getNumberOfVotes(String personalityType) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Query query =
-        new Query("Personality")
-            .setFilter(new Query.FilterPredicate("type", Query.FilterOperator.EQUAL, personalityType));
+    Query query = new Query("Personality")
+        .setFilter(new Query.FilterPredicate("type", Query.FilterOperator.EQUAL, personalityType));
     PreparedQuery results = datastore.prepare(query);
     Entity entity = results.asSingleEntity();
     if (entity == null) {
