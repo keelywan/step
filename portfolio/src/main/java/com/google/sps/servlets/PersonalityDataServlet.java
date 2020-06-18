@@ -33,11 +33,12 @@ import com.google.appengine.api.datastore.Query;
 @WebServlet("/personality-data")
 public class PersonalityDataServlet extends HttpServlet {
 
+  private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Query query = new Query("Personality");
     PreparedQuery results = datastore.prepare(query);
 
@@ -64,14 +65,12 @@ public class PersonalityDataServlet extends HttpServlet {
     personalityEntity.setProperty("type", personalityType);
     personalityEntity.setProperty("votes", currentVotes + 1);
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(personalityEntity);
 
     response.sendRedirect("/");
   }
 
   private long getNumberOfVotes(String personalityType) {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Query query = new Query("Personality")
         .setFilter(new Query.FilterPredicate("type", Query.FilterOperator.EQUAL, personalityType));
     PreparedQuery results = datastore.prepare(query);
